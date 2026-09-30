@@ -9,7 +9,7 @@
     "lint": "eslint",
     "pretypecheck": "next typegen",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/**/*.test.ts",
+    "test": "node --experimental-transform-types --import ./tests/register.mjs --test 'tests/**/*.test.ts'",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "api:generate": "bash scripts/generate-api-client.sh"
