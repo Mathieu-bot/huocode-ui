@@ -1,0 +1,30 @@
+:root {
+  --surface-canvas: #fffcf5;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f7f3ea;
+
+  --text-primary: #1f2328;
+  --text-secondary: #5b6570;
+  --text-tertiary: #68707b;
+
+  --border-hairline: #e3ddd0;
+  --border-control: #948a77;
+
+  --accent: #b23000;
+  --info: #1b62b8;
+  --focus: #b23000;
+
+  --heat-0: #edf1f5;
+  --heat-1: #ffd9a8;
+  --heat-2: #ff9a3c;
+  --heat-3: #f2620f;
+  --heat-4: #c03400;
+
+  --cell-unmeasured: #c9d0d8;
+  --on-heat: #1f2328;
+  --on-heat-inverted: #ffffff;
+
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+  --font-mono: var(--font-ibm-plex-mono);
+}

@@ -1,1 +1,48 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
+
+@theme inline {
+  --color-surface-canvas: var(--surface-canvas);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+
+  --color-border-hairline: var(--border-hairline);
+  --color-border-control: var(--border-control);
+
+  --color-accent: var(--accent);
+  --color-info: var(--info);
+  --color-focus: var(--focus);
+
+  --color-heat-0: var(--heat-0);
+  --color-heat-1: var(--heat-1);
+  --color-heat-2: var(--heat-2);
+  --color-heat-3: var(--heat-3);
+  --color-heat-4: var(--heat-4);
+  --color-cell-unmeasured: var(--cell-unmeasured);
+  --color-on-heat: var(--on-heat);
+  --color-on-heat-inverted: var(--on-heat-inverted);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+html {
+  background-color: var(--surface-canvas);
+}
+
+body {
+  background-color: var(--surface-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-body), system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
