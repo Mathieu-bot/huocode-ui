@@ -1,18 +1,19 @@
 :root {
-  --surface-canvas: #fffcf5;
-  --surface-raised: #ffffff;
-  --surface-sunken: #f7f3ea;
+  --canvas: #fffdf8;
+  --card: #fff4da;
+  --sunken: #f7f1e2;
+  --field: #e8f0fe;
+  --action: #ffc480;
+  --chip: #ebdbb7;
 
-  --text-primary: #1f2328;
-  --text-secondary: #5b6570;
-  --text-tertiary: #68707b;
-
-  --border-hairline: #e3ddd0;
-  --border-control: #948a77;
-
+  --ink: #111827;
+  --secondary: #4b5563;
+  --tertiary: #656c7a;
   --accent: #b23000;
   --info: #1b62b8;
-  --focus: #b23000;
+
+  --hairline: #d9cdb2;
+  --control: #8a7f68;
 
   --heat-0: #edf1f5;
   --heat-1: #ffd9a8;
@@ -20,9 +21,13 @@
   --heat-3: #f2620f;
   --heat-4: #c03400;
 
-  --cell-unmeasured: #c9d0d8;
+  --unmeasured: #c9d0d8;
   --on-heat: #1f2328;
   --on-heat-inverted: #ffffff;
+
+  --border-ink: 3px;
+  --shadow-hard: 4px 4px 0 var(--ink);
+  --shadow-hard-sm: 3px 3px 0 var(--ink);
 
   --font-display: var(--font-space-grotesk);
   --font-body: var(--font-inter);

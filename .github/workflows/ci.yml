@@ -35,6 +35,8 @@ jobs:
 
       - run: pnpm test
 
+      - run: pnpm check:contrast
+
       - run: pnpm build
 
   format:

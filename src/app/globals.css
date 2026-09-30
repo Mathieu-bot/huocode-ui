@@ -2,27 +2,28 @@
 @import "../styles/tokens.css";
 
 @theme inline {
-  --color-surface-canvas: var(--surface-canvas);
-  --color-surface-raised: var(--surface-raised);
-  --color-surface-sunken: var(--surface-sunken);
+  --color-canvas: var(--canvas);
+  --color-card: var(--card);
+  --color-sunken: var(--sunken);
+  --color-field: var(--field);
+  --color-action: var(--action);
+  --color-chip: var(--chip);
 
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-tertiary: var(--text-tertiary);
-
-  --color-border-hairline: var(--border-hairline);
-  --color-border-control: var(--border-control);
-
+  --color-ink: var(--ink);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
   --color-accent: var(--accent);
   --color-info: var(--info);
-  --color-focus: var(--focus);
+
+  --color-hairline: var(--hairline);
+  --color-control: var(--control);
 
   --color-heat-0: var(--heat-0);
   --color-heat-1: var(--heat-1);
   --color-heat-2: var(--heat-2);
   --color-heat-3: var(--heat-3);
   --color-heat-4: var(--heat-4);
-  --color-cell-unmeasured: var(--cell-unmeasured);
+  --color-unmeasured: var(--unmeasured);
   --color-on-heat: var(--on-heat);
   --color-on-heat-inverted: var(--on-heat-inverted);
 
@@ -31,18 +32,66 @@
   --font-mono: var(--font-mono);
 }
 
-html {
-  background-color: var(--surface-canvas);
+@layer base {
+  html {
+    background-color: var(--canvas);
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-body), system-ui, sans-serif;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--action);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+  }
 }
 
-body {
-  background-color: var(--surface-canvas);
-  color: var(--text-primary);
-  font-family: var(--font-body), system-ui, sans-serif;
-  text-rendering: optimizeLegibility;
-}
+@layer components {
+  .hard {
+    border: var(--border-ink) solid var(--ink);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-hard);
+  }
 
-:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
+  .hard-sm {
+    border: var(--border-ink) solid var(--ink);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-hard-sm);
+  }
+
+  .hard-lift {
+    transition:
+      transform 120ms ease-out,
+      box-shadow 120ms ease-out,
+      background-color 120ms ease-out;
+  }
+
+  .hard-lift:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+
+  .hard-lift:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hard-lift,
+    .hard-lift:hover,
+    .hard-lift:active {
+      transition: none;
+      transform: none;
+      box-shadow: var(--shadow-hard);
+    }
+  }
 }

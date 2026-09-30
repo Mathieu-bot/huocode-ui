@@ -12,7 +12,9 @@
     "test": "node --experimental-transform-types --import ./tests/register.mjs --test 'tests/**/*.test.ts'",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "api:generate": "bash scripts/generate-api-client.sh"
+    "api:generate": "bash scripts/generate-api-client.sh",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "verify": "pnpm format && pnpm lint && pnpm typecheck && pnpm test && pnpm check:contrast && pnpm build"
   },
   "dependencies": {
     "axios": "^1.20.0",

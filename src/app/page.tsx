@@ -1,34 +1,26 @@
-import Image from "next/image";
+import { HeroAndField } from "@/components/site/Hero";
+import { SiteHeader } from "@/components/site/SiteHeader";
 
 export default function Home() {
   return (
     <>
-      <header className="border-b border-border-hairline">
-        <div className="mx-auto flex w-full max-w-5xl items-center gap-3 px-6 py-4">
-          <Image
-            src="/logo/symbol.svg"
-            alt="HuoCode"
-            width={28}
-            height={28}
-            priority
-          />
-          <span className="font-display text-lg font-semibold">HuoCode</span>
-        </div>
-      </header>
-
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-6 py-16">
-        <h1 className="font-display text-4xl font-semibold tracking-tight">
-          Find out where the risk sits
-        </h1>
-        <p className="mt-4 max-w-prose text-lg text-text-secondary">
-          Paste a public GitHub URL and HuoCode maps the hot spots: the files
-          that are both complicated and changing fast, which is where bugs hide.
-        </p>
-
-        <p className="mt-10 text-sm text-text-tertiary">
-          The analyzer is being wired up. Nothing here works yet.
-        </p>
+      <SiteHeader />
+      <main className="flex-1">
+        <HeroAndField />
       </main>
+      <footer className="mt-auto border-t-[3px] border-ink">
+        <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-4 text-sm text-secondary">
+          <span>HuoCode — code health, mapped.</span>
+          <a
+            href="https://github.com/huocode-bot/huocode"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-ink"
+          >
+            Source
+          </a>
+        </div>
+      </footer>
     </>
   );
 }
