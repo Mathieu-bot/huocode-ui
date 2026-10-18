@@ -29,6 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable}`}
+      suppressHydrationWarning
     >
       <body className="flex min-h-dvh flex-col font-body">{children}</body>
     </html>
