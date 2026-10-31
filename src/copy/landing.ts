@@ -9,6 +9,8 @@ export type LandingCopy = {
   javaOnly: string;
   shortcut: [string, string, string, string, string];
   previewLabel: string;
+  emptyError: string;
+  invalidError: string;
 };
 
 export function landingCopy(): LandingCopy {
@@ -30,5 +32,8 @@ export function landingCopy(): LandingCopy {
       " in any repository URL.",
     ],
     previewLabel: "How to read a result",
+    emptyError: "Paste a GitHub repository first, like square/javapoet.",
+    invalidError:
+      "Use a GitHub address like github.com/owner/repo, or just owner/repo.",
   };
 }

@@ -114,3 +114,31 @@
     font-variant-numeric: tabular-nums;
   }
 }
+
+@layer components {
+  .stitch-ghost rect {
+    fill: none;
+    stroke: var(--chalk-soft);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .stitch-thread rect {
+    fill: none;
+    stroke: var(--garnet);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 5;
+    vector-effect: non-scaling-stroke;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .stitch-thread rect {
+      animation: sew 3.2s linear infinite;
+    }
+  }
+
+  @keyframes sew {
+    to {
+      stroke-dashoffset: -220;
+    }
+  }
+}
