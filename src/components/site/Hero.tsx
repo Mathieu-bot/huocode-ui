@@ -18,7 +18,7 @@ export function Hero() {
       <p className="mt-[22px] mb-[30px] max-w-[33em] text-[18.5px] text-ink-2">
         {copy.subtitle}
       </p>
-      <RepoField />
+      <RepoField showExamples />
       <div className="mt-[22px] grid gap-1.5 text-[13.5px] text-ink-2">
         <span className="inline-flex items-center gap-2">
           <Coffee size={15} strokeWidth={1.5} aria-hidden />

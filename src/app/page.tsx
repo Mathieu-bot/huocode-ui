@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 sm:px-6">
+      <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 pb-16 sm:px-6">
         <Hero />
         <QuadrantGuide />
       </main>
