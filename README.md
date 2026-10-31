@@ -35,6 +35,40 @@ The API's `huocode.cors.allowed-origins` must list this app's origin
 | `/{owner}/{repo}`                         | Shortcut that redirects to the report            |
 | `/how-it-works`                           | How the score is computed                        |
 
+## Architecture
+
+```
+src/
+  app/                 Next routes only: thin pages that compose features
+  features/
+    landing/           hero, repository field, examples
+    analysis/          /analyze flow: quick and long analyses, failures, verification
+    report/
+      shell/           report loading states, header, sticky tabs, shared context
+      file-detail/     the file panel shared by Map and Files
+      overview/        score tape, group matrix, start here, caveats
+      map/             treemap and scatter (layout.ts holds the pure maths)
+      files/           explorer (filters.ts holds the pure filtering)
+      model.ts         pure helpers over the API report shape
+      copy.ts          report wording shared by the tabs
+    how-it-works/      methodology page
+  shared/              ui primitives, layout, generic hooks and helpers (never imports a feature)
+  api/                 thin wrappers over the generated client
+  api-client/          generated from doc/api.yml, never edited by hand
+  styles/tokens.css    design tokens; contrast pairs checked by scripts/contrast.mjs
+tests/                 mirrors src/
+```
+
+Rules, enforced by ESLint where possible:
+
+- A feature is a folder with `components/`, optional `hooks/`, a `copy.ts` for every sentence it shows, and pure helpers next to them. Inside a feature, import with relative paths.
+- Features meet only through their `index.ts` (`@/features/report`); `shared/` never imports a feature; routes in `app/` import features, never the reverse.
+- No user-facing string in a component: wording lives in `copy.ts` files and only interpolates numbers the API sent. No jargon on screen (percentile, API, cached…).
+- Logic that can be pure is pure and tested under `tests/` with the real `tests/fixtures/javapoet.json` response. Async work lives in hooks.
+- Source files stay under 200 lines (`max-lines`).
+- Colours come from `tokens.css`; a new text-on-colour pair is added to `scripts/contrast.mjs`.
+- `pnpm verify` runs format, lint, typecheck, tests, contrast and build; it must pass before every commit.
+
 ## Scripts
 
 | Script           | What it does                            |
