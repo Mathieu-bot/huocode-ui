@@ -142,3 +142,10 @@
     }
   }
 }
+
+@keyframes panel-in {
+  from {
+    opacity: 0.35;
+    transform: translateY(6px);
+  }
+}
