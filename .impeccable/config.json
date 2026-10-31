@@ -1,0 +1,15 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": ["docs/design-preview/index.html"],
+        "createdAt": "2026-10-31T09:17:21.058Z",
+        "reason": "owner chose the couture atelier direction (blush cotton toile ground) in the 2026-10-31 session"
+      }
+    ]
+  }
+}
