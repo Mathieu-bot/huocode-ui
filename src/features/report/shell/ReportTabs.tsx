@@ -3,6 +3,7 @@
 import { LayoutDashboard, ListTree, Map as MapIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { GlideGroup } from "@/shared/ui/GlideGroup";
+import { ReportFilters } from "./ReportFilters";
 import { reportCopy } from "../copy";
 import type { ReportTab } from "./ReportContext";
 
@@ -44,37 +45,40 @@ export function ReportTabs({
           className={`absolute inset-y-0 right-[calc(50%-50vw)] left-[calc(50%-50vw)] -z-10 border-b border-seam-strong bg-toile/[0.97] shadow-[0_10px_24px_-18px_rgb(43_27_48/0.5)] backdrop-blur-md transition-opacity duration-300 ${stuck ? "opacity-100" : "opacity-0"}`}
         />
         <div
-          className={`border-b border-dashed transition-colors ${stuck ? "border-transparent" : "border-chalk"}`}
+          className={`flex items-center justify-between gap-3 border-b border-dashed transition-colors ${stuck ? "border-transparent" : "border-chalk"}`}
         >
-          <GlideGroup<ReportTab>
-            variant="bar"
-            label={reportCopy.tabsLabel}
-            idPrefix="report-tab"
-            value={tab}
-            onChange={onChange}
-            items={[
-              {
-                key: "overview",
-                label: reportCopy.tabs.overview,
-                icon: <LayoutDashboard {...icon} />,
-              },
-              {
-                key: "map",
-                label: reportCopy.tabs.map,
-                icon: <MapIcon {...icon} />,
-              },
-              {
-                key: "files",
-                label: reportCopy.tabs.files,
-                icon: <ListTree {...icon} />,
-                badge: (
-                  <span className="num rounded-full border border-seam bg-toile px-[7px] text-xs font-medium">
-                    {fileCount}
-                  </span>
-                ),
-              },
-            ]}
-          />
+          <div className="min-w-0 flex-1">
+            <GlideGroup<ReportTab>
+              variant="bar"
+              label={reportCopy.tabsLabel}
+              idPrefix="report-tab"
+              value={tab}
+              onChange={onChange}
+              items={[
+                {
+                  key: "overview",
+                  label: reportCopy.tabs.overview,
+                  icon: <LayoutDashboard {...icon} />,
+                },
+                {
+                  key: "map",
+                  label: reportCopy.tabs.map,
+                  icon: <MapIcon {...icon} />,
+                },
+                {
+                  key: "files",
+                  label: reportCopy.tabs.files,
+                  icon: <ListTree {...icon} />,
+                  badge: (
+                    <span className="num rounded-full border border-seam bg-toile px-[7px] text-xs font-medium">
+                      {fileCount}
+                    </span>
+                  ),
+                },
+              ]}
+            />
+          </div>
+          <ReportFilters />
         </div>
       </div>
     </>

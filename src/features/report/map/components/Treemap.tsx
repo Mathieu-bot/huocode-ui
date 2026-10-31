@@ -1,4 +1,5 @@
-import type { FileResult, Quadrant } from "@/api-client/api";
+import type { ViewFilter } from "../../model";
+import type { FileResult } from "@/api-client/api";
 import { mapCopy } from "../copy";
 import { layoutTreemap, mapHeight, truncateStart } from "../layout";
 import { onActivate } from "./keys";
@@ -10,7 +11,7 @@ type Props = {
   width: number;
   dir: string | null;
   selected: string | null;
-  focus: Quadrant | null;
+  focus: ViewFilter;
   onSelect: (path: string) => void;
   onZoom: (dir: string) => void;
 };

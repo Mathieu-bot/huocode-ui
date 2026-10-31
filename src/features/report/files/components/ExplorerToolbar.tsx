@@ -1,11 +1,7 @@
-import { ArrowDownWideNarrow, FolderTree, Search, X } from "lucide-react";
+import { ArrowDownWideNarrow, FolderTree, Search } from "lucide-react";
 import type { Ref } from "react";
-import type { Quadrant } from "@/api-client/api";
-import { Chip } from "@/shared/ui/Chip";
 import { GlideGroup } from "@/shared/ui/GlideGroup";
-import { FILTER_LABEL, filesCopy } from "../copy";
-import { quadrantCopy } from "@/shared/copy/quadrants";
-import { FILE_FILTERS, type FileFilter } from "../filters";
+import { filesCopy } from "../copy";
 
 export type Arrange = "folders" | "risk";
 
@@ -15,85 +11,16 @@ type Props = {
   searchRef: Ref<HTMLInputElement>;
   query: string;
   onQuery: (query: string) => void;
-  filter: FileFilter;
-  counts: Record<FileFilter, number>;
-  onFilter: (filter: FileFilter) => void;
-  focus: Quadrant | null;
-  onClearFocus: () => void;
   arrange: Arrange;
   onArrange: (arrange: Arrange) => void;
   /** False on small repositories: files have no score, only a complexity. */
   scored: boolean;
 };
 
-function FilterChips({
-  filter,
-  counts,
-  onFilter,
-}: Pick<Props, "filter" | "counts" | "onFilter">) {
-  return (
-    <div
-      role="group"
-      aria-label={filesCopy.filtersLabel}
-      className="flex flex-wrap gap-1.5"
-    >
-      {FILE_FILTERS.map((key) => {
-        const on = key === filter;
-        return (
-          <button
-            key={key}
-            type="button"
-            aria-pressed={on}
-            disabled={key !== "all" && counts[key] === 0}
-            onClick={() => onFilter(key)}
-            className={`inline-flex h-[30px] cursor-pointer items-center gap-1.5 rounded-full border px-[11px] text-[13px] font-semibold disabled:cursor-default disabled:opacity-50 ${on ? "border-ink bg-ink text-on-dark" : "border-seam-strong bg-linen text-ink"}`}
-          >
-            {FILTER_LABEL[key]}
-            <span
-              className={`num font-medium ${on ? "text-[#d9c9d2]" : "text-ink-3"}`}
-            >
-              {counts[key]}
-            </span>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-function FocusPill({
-  focus,
-  onClear,
-}: {
-  focus: Quadrant;
-  onClear: () => void;
-}) {
-  const copy = quadrantCopy(focus);
-  return (
-    <div className="flex items-center gap-1 text-[13px]">
-      <Chip swatch={copy.color}>{filesCopy.focusOnly(copy.label)}</Chip>
-      <button
-        type="button"
-        onClick={onClear}
-        aria-label={filesCopy.clearFocus}
-        title={filesCopy.clearFocus}
-        className="inline-flex cursor-pointer rounded-full p-1 text-ink-2 hover:bg-toile hover:text-ink"
-      >
-        <X {...icon} />
-      </button>
-    </div>
-  );
-}
-
 export function ExplorerToolbar({
   searchRef,
   query,
   onQuery,
-  filter,
-  counts,
-  onFilter,
-  focus,
-  onClearFocus,
   arrange,
   onArrange,
   scored,
@@ -112,9 +39,7 @@ export function ExplorerToolbar({
           className="w-full border-0 bg-transparent font-mono text-[13.5px] text-ink outline-none placeholder:text-ink-3 focus-visible:outline-none"
         />
       </label>
-      <FilterChips filter={filter} counts={counts} onFilter={onFilter} />
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        {focus ? <FocusPill focus={focus} onClear={onClearFocus} /> : <span />}
+      <div className="flex flex-wrap items-center justify-end gap-2">
         <GlideGroup<Arrange>
           label={filesCopy.arrangeLabel}
           value={arrange}

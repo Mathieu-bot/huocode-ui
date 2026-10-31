@@ -1,5 +1,13 @@
-import type { FileResult, Quadrant } from "@/api-client/api";
-import { DARK_KINDS, fileKind, isHatched, KIND_COLOR } from "../../model";
+import type { FileResult } from "@/api-client/api";
+import {
+  DARK_KINDS,
+  fileKind,
+  isFiltered,
+  isHatched,
+  KIND_COLOR,
+  matchesView,
+  type ViewFilter,
+} from "../../model";
 
 export const HATCH_ID = "map-hatch";
 export const PINHEAD_ID = "map-pinhead";
@@ -13,13 +21,8 @@ export function fillFor(file: FileResult): string {
 export const lightText = (file: FileResult) => DARK_KINDS.has(fileKind(file));
 
 /** True when the Overview asked to focus on a quadrant this file is not in. */
-export function isDimmed(file: FileResult, focus: Quadrant | null): boolean {
-  if (!focus) return false;
-  return !(
-    file.status === "analyzed" &&
-    !file.isTest &&
-    file.quadrant === focus
-  );
+export function isDimmed(file: FileResult, view: ViewFilter): boolean {
+  return isFiltered(view) && !matchesView(file, view);
 }
 
 export const isPinned = (file: FileResult) =>

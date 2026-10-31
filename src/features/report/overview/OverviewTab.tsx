@@ -9,6 +9,7 @@ import { QuadrantMatrix } from "./components/QuadrantMatrix";
 import { ScorePanel } from "./components/ScorePanel";
 import { StartHere } from "./components/StartHere";
 import { useReportContext } from "../shell/ReportContext";
+import { FilterNotice } from "./components/FilterNotice";
 
 export function OverviewTab() {
   const { report, stats } = useReportContext();
@@ -28,6 +29,7 @@ export function OverviewTab() {
 
   return (
     <>
+      <FilterNotice />
       <div className="grid grid-cols-1 gap-[18px] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
         {scored ? (
           <ScorePanel
