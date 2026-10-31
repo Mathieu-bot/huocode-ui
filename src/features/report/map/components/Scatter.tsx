@@ -1,4 +1,5 @@
-import type { FileResult, Quadrant } from "@/api-client/api";
+import type { ViewFilter } from "../../model";
+import type { FileResult } from "@/api-client/api";
 import { mapCopy } from "../copy";
 import { complexitySeam, jitter } from "../layout";
 import { ScatterAxes } from "./ScatterAxes";
@@ -9,7 +10,7 @@ type Props = {
   files: FileResult[];
   width: number;
   selected: string | null;
-  focus: Quadrant | null;
+  focus: ViewFilter;
   onSelect: (path: string) => void;
 };
 

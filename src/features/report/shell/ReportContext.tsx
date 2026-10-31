@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from "react";
 import type { AnalysisResult, Quadrant } from "@/api-client/api";
-import type { ReportStats } from "../model";
+import type { FileScope, ReportStats } from "../model";
 
 export type ReportTab = "overview" | "map" | "files";
 
@@ -15,6 +15,10 @@ export type ReportContextValue = {
   /** Quadrant the Overview matrix asked to focus on, or null for every file. */
   focus: Quadrant | null;
   setFocus: (quadrant: Quadrant | null) => void;
+  /** Which slice of the repository Map and Files show. */
+  scope: FileScope;
+  setScope: (scope: FileScope) => void;
+  clearFilters: () => void;
   goTab: (tab: ReportTab) => void;
 };
 

@@ -1,5 +1,5 @@
 import type { FileResult, Quadrant } from "@/api-client/api";
-import type { Band } from "./model";
+import type { Band, FileScope } from "./model";
 import { linesChanged } from "./model";
 
 const nf = new Intl.NumberFormat("en-US");
@@ -110,4 +110,27 @@ export const reportCopy = {
   couldNotRead: "Couldn't read",
   overLimit: "Method over 10",
   withinLimit: "Within the limit",
+};
+
+export const SCOPE_LABEL: Record<FileScope, string> = {
+  all: "All files",
+  prod: "Production",
+  test: "Tests",
+  other: "Other languages",
+  error: "Couldn't read",
+};
+
+export const filtersCopy = {
+  button: "Filters",
+  panelLabel: "Filter the map and the file list",
+  show: "Show",
+  group: "Group",
+  anyGroup: "Every group",
+  applies:
+    "Applies to Map and Files. The overview always covers the whole repository.",
+  clear: "Clear filters",
+  done: "Done",
+  remove: (label: string) => `Remove the ${label} filter`,
+  noticeLead: "Filters are on in Map and Files:",
+  noticeTail: "This summary still covers the whole repository.",
 };

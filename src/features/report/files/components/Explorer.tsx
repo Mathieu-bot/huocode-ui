@@ -4,12 +4,7 @@ import { SearchX } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { Button } from "@/shared/ui/Button";
 import { filesCopy } from "../copy";
-import {
-  type FileFilter,
-  filterCounts,
-  folderGroups,
-  visibleFiles,
-} from "../filters";
+import { folderGroups, visibleFiles } from "../filters";
 import { useReportContext } from "../../shell/ReportContext";
 import { type Arrange, ExplorerToolbar } from "./ExplorerToolbar";
 import { ExplorerFooter } from "./ExplorerFooter";
@@ -21,19 +16,24 @@ import {
 } from "../hooks/useExplorerKeys";
 
 export function Explorer({ className = "" }: { className?: string }) {
-  const { report, selected, select, focus, setFocus } = useReportContext();
+  const {
+    report,
+    selected,
+    select,
+    focus,
+    scope,
+    clearFilters: clearShared,
+  } = useReportContext();
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<FileFilter>("all");
   const [arrange, setArrange] = useState<Arrange>("folders");
   const [closed, setClosed] = useState<Set<string>>(() => new Set());
   const searchRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
   const files = report.files;
-  const counts = useMemo(() => filterCounts(files), [files]);
   const shown = useMemo(
-    () => visibleFiles(files, { filter, query, focus }),
-    [files, filter, query, focus],
+    () => visibleFiles(files, { filter: scope, query, focus }),
+    [files, scope, query, focus],
   );
   const groups = useMemo(() => folderGroups(shown), [shown]);
   // A search opens every folder so no match stays hidden.
@@ -60,8 +60,7 @@ export function Explorer({ className = "" }: { className?: string }) {
   }
   function clearFilters() {
     setQuery("");
-    setFilter("all");
-    setFocus(null);
+    clearShared();
   }
 
   return (
@@ -74,11 +73,6 @@ export function Explorer({ className = "" }: { className?: string }) {
         searchRef={searchRef}
         query={query}
         onQuery={setQuery}
-        filter={filter}
-        counts={counts}
-        onFilter={setFilter}
-        focus={focus}
-        onClearFocus={() => setFocus(null)}
         arrange={arrange}
         onArrange={setArrange}
         scored={report.relativeScoringEnabled}

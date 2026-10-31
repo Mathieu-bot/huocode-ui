@@ -18,7 +18,7 @@ type Props = {
 
 /** Measures the panel, draws the chosen view and hosts its tooltip. */
 export function MapCanvas({ view, dir, onZoom }: Props) {
-  const { report, selected, select, focus } = useReportContext();
+  const { report, selected, select, focus, scope } = useReportContext();
   const host = useRef<HTMLDivElement>(null);
   const width = useWidth(host);
   const byPath = useMemo(
@@ -32,7 +32,7 @@ export function MapCanvas({ view, dir, onZoom }: Props) {
     files: report.files,
     width,
     selected,
-    focus,
+    focus: { scope, focus },
     onSelect: select,
   };
 

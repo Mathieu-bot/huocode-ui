@@ -1,4 +1,4 @@
-import type { Quadrant } from "@/api-client/api";
+import type { ViewFilter } from "../../model";
 import { splitPath } from "../../model";
 import { type CellBox, truncateEnd } from "../layout";
 import { Pin } from "./MapDefs";
@@ -8,7 +8,7 @@ import { onActivate } from "./keys";
 type Props = {
   cell: CellBox;
   selected: boolean;
-  focus: Quadrant | null;
+  focus: ViewFilter;
   onSelect: (path: string) => void;
 };
 

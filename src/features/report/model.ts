@@ -126,3 +126,59 @@ export function worstIn(
 ): FileResult | undefined {
   return report.files.filter((f) => inFocus(f, focus)).sort(byRisk)[0];
 }
+
+/** Which slice of the repository Map and Files show. */
+export type FileScope = "all" | "prod" | "test" | "other" | "error";
+export const FILE_SCOPES: FileScope[] = [
+  "all",
+  "prod",
+  "test",
+  "other",
+  "error",
+];
+
+const IN_SCOPE: Record<FileScope, (file: FileResult) => boolean> = {
+  all: () => true,
+  prod: isProduction,
+  test: (f) => isAnalyzed(f) && f.isTest === true,
+  other: (f) => f.status === "unsupported_language",
+  error: (f) => f.status === "error",
+};
+
+export const inScope = (file: FileResult, scope: FileScope) =>
+  IN_SCOPE[scope](file);
+
+/** The report-wide filter shared by every tab. */
+export type ViewFilter = { scope: FileScope; focus: Quadrant | null };
+
+export function matchesView(
+  file: FileResult | undefined,
+  view: ViewFilter,
+): boolean {
+  return (
+    file !== undefined && inScope(file, view.scope) && inFocus(file, view.focus)
+  );
+}
+
+export const isFiltered = (view: ViewFilter) =>
+  view.scope !== "all" || view.focus !== null;
+
+export function scopeCounts(files: FileResult[]): Record<FileScope, number> {
+  const counts = { all: 0, prod: 0, test: 0, other: 0, error: 0 };
+  for (const file of files)
+    for (const scope of FILE_SCOPES)
+      if (IN_SCOPE[scope](file)) counts[scope] += 1;
+  return counts;
+}
+
+export function quadrantCounts(files: FileResult[]): Record<Quadrant, number> {
+  const counts = {
+    hotspot: 0,
+    complex_stable: 0,
+    frequent_simple: 0,
+    healthy: 0,
+  };
+  for (const file of files)
+    if (isProduction(file) && file.quadrant) counts[file.quadrant] += 1;
+  return counts;
+}

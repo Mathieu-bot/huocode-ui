@@ -1,24 +1,20 @@
 import type { FileResult, Quadrant } from "@/api-client/api";
 import {
   byRisk,
+  FILE_SCOPES,
   type FileKind,
   fileKind,
+  type FileScope,
   groupByDir,
-  isAnalyzed,
-  isProduction,
+  inFocus,
+  inScope,
   riskRank,
+  scopeCounts,
 } from "../model";
 
-/** Which slice of the repository the Files explorer lists. */
-export type FileFilter = "all" | "prod" | "test" | "other" | "error";
-
-export const FILE_FILTERS: FileFilter[] = [
-  "all",
-  "prod",
-  "test",
-  "other",
-  "error",
-];
+/** Which slice of the repository the Files explorer lists (shared with every tab). */
+export type FileFilter = FileScope;
+export const FILE_FILTERS = FILE_SCOPES;
 
 export type FilterState = {
   filter: FileFilter;
@@ -28,28 +24,13 @@ export type FilterState = {
   focus: Quadrant | null;
 };
 
-const IN_FILTER: Record<FileFilter, (file: FileResult) => boolean> = {
-  all: () => true,
-  prod: isProduction,
-  test: (f) => isAnalyzed(f) && f.isTest === true,
-  other: (f) => f.status === "unsupported_language",
-  error: (f) => f.status === "error",
-};
-
 export function matchesFilters(file: FileResult, state: FilterState): boolean {
-  if (!IN_FILTER[state.filter](file)) return false;
-  if (state.focus && !(isProduction(file) && file.quadrant === state.focus))
-    return false;
+  if (!inScope(file, state.filter) || !inFocus(file, state.focus)) return false;
   const query = state.query.trim().toLowerCase();
   return !query || file.path.toLowerCase().includes(query);
 }
 
-export function filterCounts(files: FileResult[]): Record<FileFilter, number> {
-  const counts = { all: 0, prod: 0, test: 0, other: 0, error: 0 };
-  for (const file of files)
-    for (const key of FILE_FILTERS) if (IN_FILTER[key](file)) counts[key] += 1;
-  return counts;
-}
+export const filterCounts = scopeCounts;
 
 /** Every file that passes the filters, worst first. */
 export function visibleFiles(
