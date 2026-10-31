@@ -1,0 +1,412 @@
+{
+  "repo": "square/javapoet",
+  "repoHealthScore": 81,
+  "files": [
+    {
+      "path": ".github/CONTRIBUTING.md",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "markdown"
+    },
+    {
+      "path": ".github/workflows/build.yml",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "yaml"
+    },
+    {
+      "path": ".github/workflows/settings.xml",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "xml"
+    },
+    {
+      "path": ".gitignore",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "unknown"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "markdown"
+    },
+    {
+      "path": "LICENSE.txt",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "text"
+    },
+    {
+      "path": "README.md",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "markdown"
+    },
+    {
+      "path": "RELEASING.md",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "markdown"
+    },
+    {
+      "path": "checkstyle.xml",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "xml"
+    },
+    {
+      "path": "pom.xml",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "xml"
+    },
+    {
+      "path": "renovate.json",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "json"
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/AnnotationSpec.java",
+      "status": "analyzed",
+      "complexity": 9,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/ArrayTypeName.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/ClassName.java",
+      "status": "analyzed",
+      "complexity": 8,
+      "isTest": false,
+      "quadrant": "frequent_simple",
+      "codeHealthScore": 55,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/CodeBlock.java",
+      "status": "analyzed",
+      "complexity": 14,
+      "isTest": false,
+      "quadrant": "complex_stable",
+      "codeHealthScore": 95,
+      "exceedsCommonComplexityThreshold": true
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/CodeWriter.java",
+      "status": "analyzed",
+      "complexity": 24,
+      "isTest": false,
+      "quadrant": "complex_stable",
+      "codeHealthScore": 81,
+      "exceedsCommonComplexityThreshold": true
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/FieldSpec.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/JavaFile.java",
+      "status": "analyzed",
+      "complexity": 10,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/LineWrapper.java",
+      "status": "analyzed",
+      "complexity": 8,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/MethodSpec.java",
+      "status": "analyzed",
+      "complexity": 12,
+      "isTest": false,
+      "quadrant": "complex_stable",
+      "codeHealthScore": 97,
+      "exceedsCommonComplexityThreshold": true
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/NameAllocator.java",
+      "status": "analyzed",
+      "complexity": 6,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/ParameterSpec.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/ParameterizedTypeName.java",
+      "status": "analyzed",
+      "complexity": 6,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/TypeName.java",
+      "status": "analyzed",
+      "complexity": 17,
+      "isTest": false,
+      "quadrant": "complex_stable",
+      "codeHealthScore": 90,
+      "exceedsCommonComplexityThreshold": true
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/TypeSpec.java",
+      "status": "analyzed",
+      "complexity": 42,
+      "isTest": false,
+      "quadrant": "hotspot",
+      "codeHealthScore": 22,
+      "exceedsCommonComplexityThreshold": true
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/TypeVariableName.java",
+      "status": "analyzed",
+      "complexity": 3,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/Util.java",
+      "status": "analyzed",
+      "complexity": 10,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/WildcardTypeName.java",
+      "status": "analyzed",
+      "complexity": 3,
+      "isTest": false,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/ClassNameNoPackageTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/AbstractTypesTest.java",
+      "status": "analyzed",
+      "complexity": 3,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/AnnotatedTypeNameTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/AnnotationSpecTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/ClassNameTest.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/CodeBlockTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/CodeWriterTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/FieldSpecTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/FileReadingTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/FileWritingTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "isTest": true,
+      "quadrant": "frequent_simple",
+      "codeHealthScore": 55,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/JavaFileTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/LineWrapperTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/MethodSpecTest.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/NameAllocatorTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/ParameterSpecTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TestFiler.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TestUtil.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TypeNameTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TypeSpecTest.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "isTest": true,
+      "quadrant": "frequent_simple",
+      "codeHealthScore": 55,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TypesEclipseTest.java",
+      "status": "analyzed",
+      "complexity": 3,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TypesTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "isTest": true,
+      "quadrant": "frequent_simple",
+      "codeHealthScore": 55,
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/UtilTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "isTest": true,
+      "quadrant": "healthy",
+      "codeHealthScore": 100,
+      "exceedsCommonComplexityThreshold": false
+    }
+  ]
+}

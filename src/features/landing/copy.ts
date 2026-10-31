@@ -10,6 +10,12 @@ export type LandingCopy = {
   shortcut: [string, string, string, string, string];
   previewLabel: string;
   emptyError: string;
+  previewScore: string;
+  previewTests: string;
+  previewOther: string;
+  previewCta: string;
+  previewOpen: (repo: string) => string;
+  previewMapLabel: (repo: string) => string;
   invalidError: string;
 };
 
@@ -32,6 +38,13 @@ export function landingCopy(): LandingCopy {
       " in any repository URL.",
     ],
     previewLabel: "How to read a result",
+    previewScore: "Repository health",
+    previewTests: "Test",
+    previewOther: "Not analyzed",
+    previewCta: "Open this report",
+    previewOpen: (repo) => `Open the example report for ${repo}`,
+    previewMapLabel: (repo) =>
+      `Example map of ${repo}: every file, grouped by folder and coloured by group`,
     emptyError: "Paste a GitHub repository first, like square/javapoet.",
     invalidError:
       "Use a GitHub address like github.com/owner/repo, or just owner/repo.",
