@@ -9,7 +9,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import type { AnalysisResult, Quadrant } from "@/api-client/api";
-import { defaultSelection, reportStats } from "../model";
+import { defaultSelection, inFocus, reportStats, worstIn } from "../model";
 import { analyzePath, type RepoRef, reportPath } from "@/shared/lib/repo";
 import { FilesTab } from "../files/FilesTab";
 import { MapTab } from "../map/MapTab";
@@ -42,7 +42,7 @@ export function ReportScreen({
   const [selected, setSelected] = useState<string | null>(() =>
     defaultSelection(report),
   );
-  const [focus, setFocus] = useState<Quadrant | null>(null);
+  const [focus, setFocusState] = useState<Quadrant | null>(null);
   const origin = useSyncExternalStore(
     () => () => {},
     () => window.location.origin,
@@ -58,7 +58,7 @@ export function ReportScreen({
     }
   }, [report]);
 
-  const select = useCallback((path: string) => {
+  const showFile = useCallback((path: string) => {
     setSelected(path);
     window.history.replaceState(
       null,
@@ -66,6 +66,26 @@ export function ReportScreen({
       `${window.location.pathname}${window.location.search}#file=${encodeURIComponent(path)}`,
     );
   }, []);
+
+  // Selection and quadrant focus stay consistent: picking a file outside the
+  // focused group clears the focus, and focusing a group opens its worst file.
+  const select = useCallback(
+    (path: string) => {
+      const file = report.files.find((f) => f.path === path);
+      setFocusState((current) => (inFocus(file, current) ? current : null));
+      showFile(path);
+    },
+    [report, showFile],
+  );
+
+  const setFocus = useCallback(
+    (quadrant: Quadrant | null) => {
+      setFocusState(quadrant);
+      const first = quadrant ? worstIn(report, quadrant) : undefined;
+      if (first) showFile(first.path);
+    },
+    [report, showFile],
+  );
 
   const goTab = useCallback(
     (next: ReportTab) => {
@@ -93,7 +113,7 @@ export function ReportScreen({
 
   const value = useMemo(
     () => ({ report, stats, selected, select, focus, setFocus, goTab }),
-    [report, stats, selected, select, focus, goTab],
+    [report, stats, selected, select, focus, setFocus, goTab],
   );
 
   return (

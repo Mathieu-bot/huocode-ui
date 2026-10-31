@@ -54,3 +54,16 @@ describe("report model on the real square/javapoet response", () => {
     );
   });
 });
+
+describe("quadrant focus", () => {
+  it("keeps only production files of the focused quadrant in view", async () => {
+    const { inFocus, worstIn } = await import("@/features/report/model");
+    assert.equal(inFocus(file("TypeSpec.java"), "hotspot"), true);
+    assert.equal(inFocus(file("ClassName.java"), "hotspot"), false);
+    assert.equal(inFocus(file("TypeSpecTest.java"), "frequent_simple"), false);
+    assert.equal(inFocus(file("ClassName.java"), null), true);
+    assert.ok(
+      worstIn(report, "complex_stable")!.path.endsWith("CodeWriter.java"),
+    );
+  });
+});

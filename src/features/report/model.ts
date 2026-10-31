@@ -107,3 +107,22 @@ export function defaultSelection(report: AnalysisResult): string | null {
 export function toDate(value: Date | string): Date {
   return value instanceof Date ? value : new Date(value);
 }
+
+/** True when a quadrant focus keeps this file in view (production files of that quadrant only). */
+export function inFocus(
+  file: FileResult | undefined,
+  focus: Quadrant | null,
+): boolean {
+  return (
+    focus === null ||
+    (file !== undefined && isProduction(file) && file.quadrant === focus)
+  );
+}
+
+/** The file to show first when a quadrant is focused: its worst production file. */
+export function worstIn(
+  report: AnalysisResult,
+  focus: Quadrant,
+): FileResult | undefined {
+  return report.files.filter((f) => inFocus(f, focus)).sort(byRisk)[0];
+}
