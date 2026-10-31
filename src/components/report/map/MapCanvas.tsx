@@ -4,17 +4,20 @@ import { useMemo, useRef } from "react";
 import { mapHeight } from "@/lib/treemap";
 import { useReportContext } from "../ReportContext";
 import { MapTooltip } from "./MapTooltip";
+import { Scatter, scatterHeight } from "./Scatter";
 import { Treemap } from "./Treemap";
+import type { MapView } from "./useMapView";
 import { useTip } from "./useTip";
 import { useWidth } from "./useWidth";
 
 type Props = {
+  view: MapView;
   dir: string | null;
   onZoom: (dir: string) => void;
 };
 
-/** Measures the panel, draws the treemap and hosts its tooltip. */
-export function MapCanvas({ dir, onZoom }: Props) {
+/** Measures the panel, draws the chosen view and hosts its tooltip. */
+export function MapCanvas({ view, dir, onZoom }: Props) {
   const { report, selected, select, focus } = useReportContext();
   const host = useRef<HTMLDivElement>(null);
   const width = useWidth(host);
@@ -23,7 +26,8 @@ export function MapCanvas({ dir, onZoom }: Props) {
     [report],
   );
   const { tip, ...handlers } = useTip(byPath);
-  const minHeight = mapHeight(width);
+  const minHeight =
+    view === "scatter" ? scatterHeight(width) : mapHeight(width);
   const props = {
     files: report.files,
     width,
@@ -39,7 +43,12 @@ export function MapCanvas({ dir, onZoom }: Props) {
       style={{ minHeight }}
       {...handlers}
     >
-      {width > 0 && <Treemap {...props} dir={dir} onZoom={onZoom} />}
+      {width > 0 &&
+        (view === "scatter" ? (
+          <Scatter {...props} />
+        ) : (
+          <Treemap {...props} dir={dir} onZoom={onZoom} />
+        ))}
       {tip && <MapTooltip tip={tip} />}
     </div>
   );
