@@ -12,6 +12,7 @@ import {
   reportCopy,
 } from "../../copy";
 import { band, linesChanged, splitPath } from "../../model";
+import { PathText } from "@/shared/ui/PathText";
 
 export type TipState = { file: FileResult; x: number; y: number };
 
@@ -28,8 +29,8 @@ function TipBody({ file }: { file: FileResult }) {
   const { dir, name } = splitPath(file.path);
   const head = (
     <>
-      <b className="font-mono text-[13.5px] break-all">{name}</b>
-      <div className="font-mono text-xs break-all text-[#CDBBC6]">{dir}</div>
+      <b className="font-mono text-[13.5px] [overflow-wrap:anywhere]">{name}</b>
+      <PathText path={dir} className="block font-mono text-xs text-[#CDBBC6]" />
     </>
   );
   if (file.status !== "analyzed") {
