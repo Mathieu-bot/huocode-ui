@@ -1,10 +1,6 @@
 import type { AnalysisResult } from "@/api-client/api";
-import { toDate } from "../lib/report";
-
-// Relative imports keep this module loadable by the node test runner.
-const nf = new Intl.NumberFormat("en-US");
-const plural = (value: number, one: string, many: string) =>
-  `${nf.format(value)} ${value === 1 ? one : many}`;
+import { plural } from "@/copy/report";
+import { toDate } from "@/lib/report";
 
 export type Caveat = {
   kind: "languages" | "comparison" | "renamed";
