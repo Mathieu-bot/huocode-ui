@@ -2,30 +2,35 @@ import type { Quadrant } from "@/api-client/api";
 
 export type QuadrantCopy = {
   label: string;
+  short: string;
   detail: string;
-  heat: 0 | 1 | 2 | 3 | 4;
+  color: string;
 };
 
 const COPY: Record<Quadrant, QuadrantCopy> = {
   hotspot: {
-    label: "Hotspots",
-    detail: "Complicated and changing fast. This is where bugs live.",
-    heat: 4,
+    label: "Hotspot",
+    short: "Complex and changing a lot",
+    detail: "Complex and changing a lot. Review these first.",
+    color: "var(--q-hot)",
   },
   complex_stable: {
-    label: "Complicated, quiet",
-    detail: "Hard to read, but rarely touched. Fix it when you next go in.",
-    heat: 2,
+    label: "Complex but stable",
+    short: "Complex, rarely changed",
+    detail: "Hard to read, rarely touched. Lower urgency.",
+    color: "var(--q-cs)",
   },
   frequent_simple: {
-    label: "Simple, busy",
-    detail: "Low risk, but a lot of eyes on it.",
-    heat: 1,
+    label: "Changes often",
+    short: "Simple, changed a lot",
+    detail: "Busy but simple. Generally fine.",
+    color: "var(--q-fs)",
   },
   healthy: {
-    label: "Healthy",
-    detail: "Simple and stable. Nothing to do here.",
-    heat: 0,
+    label: "Calm",
+    short: "Simple and stable",
+    detail: "Simple and stable. Nothing to flag.",
+    color: "var(--q-ok)",
   },
 };
 
