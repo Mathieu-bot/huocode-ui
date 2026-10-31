@@ -1,22 +1,34 @@
 export type LandingCopy = {
-  titleLines: [string, string];
+  titleStart: string;
+  titleStitched: string;
   subtitle: string;
-  subnote: string;
   fieldLabel: string;
   placeholder: string;
   cta: string;
-  footnote: string;
+  examplesLabel: string;
+  javaOnly: string;
+  shortcut: [string, string, string, string, string];
+  previewLabel: string;
 };
 
 export function landingCopy(): LandingCopy {
   return {
-    titleLines: ["See where the", "risk hides"],
+    titleStart: "Find the files where your next change is ",
+    titleStitched: "most likely to hurt",
     subtitle:
-      "Paste a public GitHub URL and HuoCode maps the files that are both complicated and changing fast.",
-    subnote: "That's where bugs come from.",
-    fieldLabel: "Repository URL",
-    placeholder: "https://github.com/owner/repository",
-    cta: "Analyze",
-    footnote: "We need at least 15 files we can measure, and we stop at 3,000.",
+      "Paste a public GitHub repository. HuoCode crosses how complex each file is with how much it changes, and shows you which ones to review first.",
+    fieldLabel: "GitHub repository",
+    placeholder: "owner/repo or https://github.com/owner/repo",
+    cta: "Map this repository",
+    examplesLabel: "Try one",
+    javaOnly: "Java only for now. Other files are listed, never scored.",
+    shortcut: [
+      "Shortcut: replace ",
+      "github.com",
+      " with ",
+      "huocode.app",
+      " in any repository URL.",
+    ],
+    previewLabel: "How to read a result",
   };
 }

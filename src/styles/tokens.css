@@ -1,35 +1,37 @@
+/*
+ * Couture atelier palette: blush cotton toile, aubergine ink, garnet accent,
+ * quadrant colours as flat silk swatches. Every pair the UI draws text on is
+ * listed in scripts/contrast.mjs and checked in CI.
+ */
 :root {
-  --canvas: #fffdf8;
-  --card: #fff4da;
-  --sunken: #f7f1e2;
-  --field: #e8f0fe;
-  --action: #ffc480;
-  --chip: #ebdbb7;
+  --toile: #f6f1ef;
+  --linen: #fffcfb;
+  --blush: #fae4ea;
+  --blush-line: #e9c3cd;
 
-  --ink: #111827;
-  --secondary: #4b5563;
-  --tertiary: #656c7a;
-  --accent: #b23000;
-  --info: #1b62b8;
+  --ink: #2b1b30;
+  --ink-2: #5c4c61;
+  --ink-3: #6e5f72;
+  --on-dark: #fff8fa;
 
-  --hairline: #d9cdb2;
-  --control: #8a7f68;
+  --chalk: #8da6c6;
+  --chalk-soft: #d3deeb;
+  --seam: #e2d6d6;
+  --seam-strong: #cdbdbf;
 
-  --heat-0: #edf1f5;
-  --heat-1: #ffd9a8;
-  --heat-2: #ff9a3c;
-  --heat-3: #f2620f;
-  --heat-4: #c03400;
+  --garnet: #a8234b;
+  --garnet-deep: #861a3b;
 
-  --unmeasured: #c9d0d8;
-  --on-heat: #1f2328;
-  --on-heat-inverted: #ffffff;
+  --q-hot: #c9402d;
+  --q-cs: #d8981c;
+  --q-fs: #4a6cb0;
+  --q-ok: #8fb08b;
+  --q-test: #a371f7;
+  --q-none: #cdbdbf;
+  --slate: #a3a6b4;
+  --slate-dark: #535872;
 
-  --border-ink: 3px;
-  --shadow-hard: 4px 4px 0 var(--ink);
-  --shadow-hard-sm: 3px 3px 0 var(--ink);
-
-  --font-display: var(--font-space-grotesk);
-  --font-body: var(--font-inter);
-  --font-mono: var(--font-ibm-plex-mono);
+  --ok: #3d7744;
+  --warn: #9a6200;
+  --crit: #b3261e;
 }

@@ -1,30 +1,41 @@
+import { BookOpen, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { siteCopy } from "@/copy/site";
 
 export function SiteHeader() {
+  const copy = siteCopy();
   return (
-    <header className="sticky top-0 z-50 border-b-[3px] border-ink bg-canvas">
-      <div className="mx-auto flex h-16 w-full max-w-4xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-3">
+    <header className="sticky top-0 z-50 h-[var(--top-h)] bg-ink text-[#f4ecef]">
+      <div className="mx-auto flex h-full w-full max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6">
+        <Link href="/" aria-label={copy.home} className="flex items-center">
           <Image
-            src="/logo/symbol.svg"
-            alt=""
-            width={32}
-            height={32}
+            src="/logo/horizontal-logo-dark.svg"
+            alt="HuoCode"
+            width={128}
+            height={30}
             priority
           />
-          <span className="font-display text-2xl font-bold tracking-tight">
-            Huo<span className="text-accent">Code</span>
-          </span>
         </Link>
-        <nav className="flex items-center gap-6 text-sm font-medium">
+        <nav
+          aria-label={copy.mainNav}
+          className="flex items-center gap-5 text-[14.5px] text-[#d9c9d2]"
+        >
+          <Link
+            href="/how-it-works"
+            className="inline-flex items-center gap-2 no-underline hover:text-white"
+          >
+            <BookOpen size={18} strokeWidth={1.5} aria-hidden />
+            <span className="hidden sm:inline">{copy.howItWorks}</span>
+          </Link>
           <a
             href="https://github.com/huocode-bot/huocode"
             target="_blank"
             rel="noopener noreferrer"
-            className="hard-lift rounded px-2 py-1 hover:bg-chip"
+            className="inline-flex items-center gap-2 no-underline hover:text-white"
           >
-            Source
+            <Github size={18} strokeWidth={1.5} aria-hidden />
+            <span className="hidden sm:inline">{copy.source}</span>
           </a>
         </nav>
       </div>
