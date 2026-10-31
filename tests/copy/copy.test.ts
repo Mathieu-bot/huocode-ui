@@ -99,3 +99,14 @@ describe("narration only uses numbers the API sent", () => {
     );
   });
 });
+
+describe("copy never states a server setting", () => {
+  it("does not hard-code the file limit, which the API configures", () => {
+    const { detail } = failureCopy({
+      kind: "api",
+      code: "REPO_TOO_LARGE",
+      retryAfterSeconds: null,
+    });
+    assert.doesNotMatch(detail, /\d/);
+  });
+});

@@ -24,7 +24,7 @@ const CODE_COPY: Record<
   REPO_TOO_LARGE: {
     title: "This repository is too big for us",
     detail:
-      "We cap analysis at 3,000 readable files. Try a smaller repository.",
+      "It has more files than HuoCode can map for now, and we never show a partial result. Try a smaller repository.",
   },
   RATE_LIMITED: {
     title: "You've started a few analyses already",
