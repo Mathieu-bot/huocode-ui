@@ -1,0 +1,795 @@
+{
+  "status": "completed",
+  "repo": "square/javapoet",
+  "commitSha": "b9017a9503b76e11b4ad4c1a9f050e2d29112cb0",
+  "analyzedAt": "2026-10-30T02:25:40.170667Z",
+  "strategy": "api_direct",
+  "limitations": [
+    {
+      "code": "UNSUPPORTED_LANGUAGE_FILES",
+      "fileCount": 11
+    }
+  ],
+  "analysisWindow": {
+    "commitsAnalyzed": 465,
+    "oldestCommitDate": "2013-10-23T05:54:44Z",
+    "newestCommitDate": "2024-10-10T21:04:58Z",
+    "distinctAuthors": 85
+  },
+  "relativeScoringEnabled": true,
+  "scoreVersion": "1.4",
+  "repoHealthScore": 81,
+  "summary": {
+    "hotspot": 1,
+    "complexStable": 4,
+    "frequentSimple": 1,
+    "healthy": 11,
+    "unanalyzed": 11
+  },
+  "files": [
+    {
+      "path": ".github/CONTRIBUTING.md",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "markdown"
+    },
+    {
+      "path": ".github/workflows/build.yml",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "yaml"
+    },
+    {
+      "path": ".github/workflows/settings.xml",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "xml"
+    },
+    {
+      "path": ".gitignore",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "unknown"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "markdown"
+    },
+    {
+      "path": "LICENSE.txt",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "text"
+    },
+    {
+      "path": "README.md",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "markdown"
+    },
+    {
+      "path": "RELEASING.md",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "markdown"
+    },
+    {
+      "path": "checkstyle.xml",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "xml"
+    },
+    {
+      "path": "pom.xml",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "xml"
+    },
+    {
+      "path": "renovate.json",
+      "status": "unsupported_language",
+      "unsupportedLanguage": "json"
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/AnnotationSpec.java",
+      "status": "analyzed",
+      "complexity": 9,
+      "churn": {
+        "commits": 34,
+        "authors": 13,
+        "linesAdded": 450,
+        "linesDeleted": 194,
+        "effectiveLines": 644
+      },
+      "isTest": false,
+      "complexityPercentile": 59,
+      "churnPercentile": 71,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/ArrayTypeName.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "churn": {
+        "commits": 12,
+        "authors": 7,
+        "linesAdded": 112,
+        "linesDeleted": 22,
+        "effectiveLines": 134
+      },
+      "isTest": false,
+      "complexityPercentile": 29,
+      "churnPercentile": 6,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/ClassName.java",
+      "status": "analyzed",
+      "complexity": 8,
+      "churn": {
+        "commits": 45,
+        "authors": 15,
+        "linesAdded": 673,
+        "linesDeleted": 654,
+        "effectiveLines": 1327
+      },
+      "isTest": false,
+      "complexityPercentile": 53,
+      "churnPercentile": 88,
+      "codeHealthScore": 55,
+      "quadrant": "frequent_simple",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/CodeBlock.java",
+      "status": "analyzed",
+      "complexity": 14,
+      "churn": {
+        "commits": 33,
+        "authors": 13,
+        "linesAdded": 680,
+        "linesDeleted": 268,
+        "effectiveLines": 948
+      },
+      "isTest": false,
+      "complexityPercentile": 82,
+      "churnPercentile": 76,
+      "codeHealthScore": 95,
+      "quadrant": "complex_stable",
+      "exceedsCommonComplexityThreshold": true
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/CodeWriter.java",
+      "status": "analyzed",
+      "complexity": 24,
+      "churn": {
+        "commits": 59,
+        "authors": 14,
+        "linesAdded": 1011,
+        "linesDeleted": 534,
+        "effectiveLines": 1545
+      },
+      "isTest": false,
+      "complexityPercentile": 94,
+      "churnPercentile": 94,
+      "codeHealthScore": 81,
+      "quadrant": "complex_stable",
+      "exceedsCommonComplexityThreshold": true
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/FieldSpec.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "churn": {
+        "commits": 27,
+        "authors": 10,
+        "linesAdded": 257,
+        "linesDeleted": 108,
+        "effectiveLines": 365
+      },
+      "isTest": false,
+      "complexityPercentile": 29,
+      "churnPercentile": 53,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/JavaFile.java",
+      "status": "analyzed",
+      "complexity": 10,
+      "churn": {
+        "commits": 29,
+        "authors": 13,
+        "linesAdded": 388,
+        "linesDeleted": 94,
+        "effectiveLines": 482
+      },
+      "isTest": false,
+      "complexityPercentile": 71,
+      "churnPercentile": 59,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/LineWrapper.java",
+      "status": "analyzed",
+      "complexity": 8,
+      "churn": {
+        "commits": 5,
+        "authors": 4,
+        "linesAdded": 166,
+        "linesDeleted": 23,
+        "effectiveLines": 189
+      },
+      "isTest": false,
+      "complexityPercentile": 53,
+      "churnPercentile": 24,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/MethodSpec.java",
+      "status": "analyzed",
+      "complexity": 12,
+      "churn": {
+        "commits": 58,
+        "authors": 23,
+        "linesAdded": 735,
+        "linesDeleted": 278,
+        "effectiveLines": 1013
+      },
+      "isTest": false,
+      "complexityPercentile": 76,
+      "churnPercentile": 82,
+      "codeHealthScore": 97,
+      "quadrant": "complex_stable",
+      "exceedsCommonComplexityThreshold": true
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/NameAllocator.java",
+      "status": "analyzed",
+      "complexity": 6,
+      "churn": {
+        "commits": 5,
+        "authors": 4,
+        "linesAdded": 157,
+        "linesDeleted": 5,
+        "effectiveLines": 162
+      },
+      "isTest": false,
+      "complexityPercentile": 41,
+      "churnPercentile": 12,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/ParameterSpec.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "churn": {
+        "commits": 30,
+        "authors": 12,
+        "linesAdded": 256,
+        "linesDeleted": 83,
+        "effectiveLines": 339
+      },
+      "isTest": false,
+      "complexityPercentile": 29,
+      "churnPercentile": 47,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/ParameterizedTypeName.java",
+      "status": "analyzed",
+      "complexity": 6,
+      "churn": {
+        "commits": 12,
+        "authors": 7,
+        "linesAdded": 176,
+        "linesDeleted": 53,
+        "effectiveLines": 229
+      },
+      "isTest": false,
+      "complexityPercentile": 41,
+      "churnPercentile": 29,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/TypeName.java",
+      "status": "analyzed",
+      "complexity": 17,
+      "churn": {
+        "commits": 24,
+        "authors": 11,
+        "linesAdded": 434,
+        "linesDeleted": 86,
+        "effectiveLines": 520
+      },
+      "isTest": false,
+      "complexityPercentile": 88,
+      "churnPercentile": 65,
+      "codeHealthScore": 90,
+      "quadrant": "complex_stable",
+      "exceedsCommonComplexityThreshold": true
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/TypeSpec.java",
+      "status": "analyzed",
+      "complexity": 42,
+      "churn": {
+        "commits": 63,
+        "authors": 22,
+        "linesAdded": 1244,
+        "linesDeleted": 500,
+        "effectiveLines": 1744
+      },
+      "isTest": false,
+      "complexityPercentile": 100,
+      "churnPercentile": 100,
+      "codeHealthScore": 22,
+      "quadrant": "hotspot",
+      "exceedsCommonComplexityThreshold": true
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/TypeVariableName.java",
+      "status": "analyzed",
+      "complexity": 3,
+      "churn": {
+        "commits": 14,
+        "authors": 7,
+        "linesAdded": 223,
+        "linesDeleted": 79,
+        "effectiveLines": 302
+      },
+      "isTest": false,
+      "complexityPercentile": 12,
+      "churnPercentile": 35,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/Util.java",
+      "status": "analyzed",
+      "complexity": 10,
+      "churn": {
+        "commits": 11,
+        "authors": 7,
+        "linesAdded": 217,
+        "linesDeleted": 100,
+        "effectiveLines": 317
+      },
+      "isTest": false,
+      "complexityPercentile": 71,
+      "churnPercentile": 41,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/main/java/com/squareup/javapoet/WildcardTypeName.java",
+      "status": "analyzed",
+      "complexity": 3,
+      "churn": {
+        "commits": 12,
+        "authors": 6,
+        "linesAdded": 142,
+        "linesDeleted": 30,
+        "effectiveLines": 172
+      },
+      "isTest": false,
+      "complexityPercentile": 12,
+      "churnPercentile": 18,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/ClassNameNoPackageTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "churn": {
+        "commits": 1,
+        "authors": 1,
+        "linesAdded": 30,
+        "linesDeleted": 0,
+        "effectiveLines": 30
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 0,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/AbstractTypesTest.java",
+      "status": "analyzed",
+      "complexity": 3,
+      "churn": {
+        "commits": 6,
+        "authors": 4,
+        "linesAdded": 294,
+        "linesDeleted": 45,
+        "effectiveLines": 339
+      },
+      "isTest": true,
+      "complexityPercentile": 12,
+      "churnPercentile": 47,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/AnnotatedTypeNameTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "churn": {
+        "commits": 8,
+        "authors": 5,
+        "linesAdded": 251,
+        "linesDeleted": 65,
+        "effectiveLines": 316
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 35,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/AnnotationSpecTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "churn": {
+        "commits": 12,
+        "authors": 6,
+        "linesAdded": 382,
+        "linesDeleted": 41,
+        "effectiveLines": 423
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 53,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/ClassNameTest.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "churn": {
+        "commits": 19,
+        "authors": 9,
+        "linesAdded": 274,
+        "linesDeleted": 88,
+        "effectiveLines": 362
+      },
+      "isTest": true,
+      "complexityPercentile": 29,
+      "churnPercentile": 47,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/CodeBlockTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "churn": {
+        "commits": 14,
+        "authors": 9,
+        "linesAdded": 429,
+        "linesDeleted": 123,
+        "effectiveLines": 552
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 65,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/CodeWriterTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "churn": {
+        "commits": 1,
+        "authors": 1,
+        "linesAdded": 18,
+        "linesDeleted": 0,
+        "effectiveLines": 18
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 0,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/FieldSpecTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "churn": {
+        "commits": 4,
+        "authors": 4,
+        "linesAdded": 60,
+        "linesDeleted": 3,
+        "effectiveLines": 63
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 0,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/FileReadingTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "churn": {
+        "commits": 5,
+        "authors": 4,
+        "linesAdded": 127,
+        "linesDeleted": 19,
+        "effectiveLines": 146
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 6,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/FileWritingTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "churn": {
+        "commits": 44,
+        "authors": 16,
+        "linesAdded": 762,
+        "linesDeleted": 1193,
+        "effectiveLines": 1955
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 100,
+      "codeHealthScore": 55,
+      "quadrant": "frequent_simple",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/JavaFileTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "churn": {
+        "commits": 27,
+        "authors": 11,
+        "linesAdded": 1038,
+        "linesDeleted": 84,
+        "effectiveLines": 1122
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 82,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/LineWrapperTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "churn": {
+        "commits": 3,
+        "authors": 2,
+        "linesAdded": 193,
+        "linesDeleted": 4,
+        "effectiveLines": 197
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 24,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/MethodSpecTest.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "churn": {
+        "commits": 28,
+        "authors": 17,
+        "linesAdded": 533,
+        "linesDeleted": 107,
+        "effectiveLines": 640
+      },
+      "isTest": true,
+      "complexityPercentile": 29,
+      "churnPercentile": 65,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/NameAllocatorTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "churn": {
+        "commits": 5,
+        "authors": 5,
+        "linesAdded": 97,
+        "linesDeleted": 2,
+        "effectiveLines": 99
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 0,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/ParameterSpecTest.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "churn": {
+        "commits": 8,
+        "authors": 7,
+        "linesAdded": 139,
+        "linesDeleted": 8,
+        "effectiveLines": 147
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 6,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TestFiler.java",
+      "status": "analyzed",
+      "complexity": 2,
+      "churn": {
+        "commits": 5,
+        "authors": 3,
+        "linesAdded": 126,
+        "linesDeleted": 48,
+        "effectiveLines": 174
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 18,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TestUtil.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "churn": {
+        "commits": 1,
+        "authors": 1,
+        "linesAdded": 15,
+        "linesDeleted": 0,
+        "effectiveLines": 15
+      },
+      "isTest": true,
+      "complexityPercentile": 29,
+      "churnPercentile": 0,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TypeNameTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "churn": {
+        "commits": 9,
+        "authors": 5,
+        "linesAdded": 288,
+        "linesDeleted": 121,
+        "effectiveLines": 409
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 53,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TypeSpecTest.java",
+      "status": "analyzed",
+      "complexity": 4,
+      "churn": {
+        "commits": 77,
+        "authors": 26,
+        "linesAdded": 3173,
+        "linesDeleted": 700,
+        "effectiveLines": 3873
+      },
+      "isTest": true,
+      "complexityPercentile": 29,
+      "churnPercentile": 100,
+      "codeHealthScore": 55,
+      "quadrant": "frequent_simple",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TypesEclipseTest.java",
+      "status": "analyzed",
+      "complexity": 3,
+      "churn": {
+        "commits": 2,
+        "authors": 1,
+        "linesAdded": 146,
+        "linesDeleted": 4,
+        "effectiveLines": 150
+      },
+      "isTest": true,
+      "complexityPercentile": 12,
+      "churnPercentile": 6,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/TypesTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "churn": {
+        "commits": 10,
+        "authors": 6,
+        "linesAdded": 313,
+        "linesDeleted": 279,
+        "effectiveLines": 592
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 65,
+      "codeHealthScore": 55,
+      "quadrant": "frequent_simple",
+      "exceedsCommonComplexityThreshold": false
+    },
+    {
+      "path": "src/test/java/com/squareup/javapoet/UtilTest.java",
+      "status": "analyzed",
+      "complexity": 1,
+      "churn": {
+        "commits": 2,
+        "authors": 2,
+        "linesAdded": 70,
+        "linesDeleted": 1,
+        "effectiveLines": 71
+      },
+      "isTest": true,
+      "complexityPercentile": 0,
+      "churnPercentile": 0,
+      "codeHealthScore": 100,
+      "quadrant": "healthy",
+      "exceedsCommonComplexityThreshold": false
+    }
+  ],
+  "top5": [
+    "src/main/java/com/squareup/javapoet/TypeSpec.java",
+    "src/main/java/com/squareup/javapoet/ClassName.java",
+    "src/main/java/com/squareup/javapoet/CodeWriter.java",
+    "src/main/java/com/squareup/javapoet/TypeName.java",
+    "src/main/java/com/squareup/javapoet/CodeBlock.java"
+  ]
+}

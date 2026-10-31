@@ -1,0 +1,37 @@
+/*
+ * Couture atelier palette: blush cotton toile, aubergine ink, garnet accent,
+ * quadrant colours as flat silk swatches. Every pair the UI draws text on is
+ * listed in scripts/contrast.mjs and checked in CI.
+ */
+:root {
+  --toile: #f6f1ef;
+  --linen: #fffcfb;
+  --blush: #fae4ea;
+  --blush-line: #e9c3cd;
+
+  --ink: #2b1b30;
+  --ink-2: #5c4c61;
+  --ink-3: #6e5f72;
+  --on-dark: #fff8fa;
+
+  --chalk: #8da6c6;
+  --chalk-soft: #d3deeb;
+  --seam: #e2d6d6;
+  --seam-strong: #cdbdbf;
+
+  --garnet: #a8234b;
+  --garnet-deep: #861a3b;
+
+  --q-hot: #c9402d;
+  --q-cs: #d8981c;
+  --q-fs: #4a6cb0;
+  --q-ok: #8fb08b;
+  --q-test: #a371f7;
+  --q-none: #cdbdbf;
+  --slate: #a3a6b4;
+  --slate-dark: #535872;
+
+  --ok: #3d7744;
+  --warn: #9a6200;
+  --crit: #b3261e;
+}

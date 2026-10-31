@@ -1,0 +1,151 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+@theme inline {
+  --color-toile: var(--toile);
+  --color-linen: var(--linen);
+  --color-blush: var(--blush);
+  --color-blush-line: var(--blush-line);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-on-dark: var(--on-dark);
+  --color-chalk: var(--chalk);
+  --color-chalk-soft: var(--chalk-soft);
+  --color-seam: var(--seam);
+  --color-seam-strong: var(--seam-strong);
+  --color-garnet: var(--garnet);
+  --color-garnet-deep: var(--garnet-deep);
+  --color-q-hot: var(--q-hot);
+  --color-q-cs: var(--q-cs);
+  --color-q-fs: var(--q-fs);
+  --color-q-ok: var(--q-ok);
+  --color-q-test: var(--q-test);
+  --color-q-none: var(--q-none);
+  --color-slate: var(--slate);
+  --color-slate-dark: var(--slate-dark);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-crit: var(--crit);
+
+  --font-sans: var(--font-hanken), "Segoe UI", system-ui, sans-serif;
+  --font-mono:
+    var(--font-red-hat-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+@layer base {
+  :root {
+    --top-h: 58px;
+  }
+
+  html {
+    background-color: var(--toile);
+    overflow-x: clip;
+  }
+
+  body {
+    background-color: var(--toile);
+    background-image:
+      linear-gradient(rgb(141 166 198 / 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(141 166 198 / 0.16) 1px, transparent 1px);
+    background-size: 32px 32px;
+    color: var(--ink);
+    overflow-x: clip;
+    text-rendering: optimizeLegibility;
+  }
+
+  * {
+    scrollbar-color: var(--seam-strong) transparent;
+    scrollbar-width: thin;
+  }
+
+  ::selection {
+    background-color: var(--blush-line);
+    color: var(--ink);
+  }
+
+  input {
+    caret-color: var(--garnet);
+  }
+
+  a {
+    text-underline-offset: 3px;
+    text-decoration-color: var(--chalk);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--garnet);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+}
+
+@layer components {
+  .panel {
+    background-color: var(--linen);
+    border: 1px solid var(--seam-strong);
+    border-radius: 10px;
+    box-shadow:
+      0 1px 0 rgb(43 27 48 / 0.03),
+      0 10px 30px -18px rgb(43 27 48 / 0.25);
+  }
+
+  /* Pinking-shear edge for quadrant swatches. */
+  .pinked {
+    --z: 7px;
+    mask:
+      conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg)
+        top / var(--z) 51% repeat-x,
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg)
+        bottom / var(--z) 51% repeat-x;
+  }
+
+  /* Files that were not analyzed: never drawn like a low-risk file. */
+  .hatch {
+    background: repeating-linear-gradient(
+      135deg,
+      #eee6e4 0 3px,
+      #c4b5b6 3px 4.5px
+    );
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  .stitch-ghost rect {
+    fill: none;
+    stroke: var(--chalk-soft);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .stitch-thread rect {
+    fill: none;
+    stroke: var(--garnet);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 5;
+    vector-effect: non-scaling-stroke;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .stitch-thread rect {
+      animation: sew 3.2s linear infinite;
+    }
+  }
+
+  @keyframes sew {
+    to {
+      stroke-dashoffset: -220;
+    }
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0.35;
+    transform: translateY(6px);
+  }
+}

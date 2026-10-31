@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HuoCode Design Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Red+Hat+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a couture atelier's pattern table. Blush cotton toile with a chalk-blue drafting grid,
+   aubergine ink, silk-swatch quadrant colours with pinked edges, 1px chalk seams, a tape measure for the score. */
+:root {
+  --toile: #F6F1EF;
+  --linen: #FFFCFB;
+  --ink: #2B1B30;
+  --ink-2: #5C4C61;
+  --ink-3: #6E5F72;
+  --chalk: #8DA6C6;
+  --chalk-soft: #D3DEEB;
+  --seam: #E2D6D6;
+  --seam-strong: #CDBDBF;
+  --garnet: #A8234B;
+  --garnet-deep: #861A3B;
+  --blush: #FAE4EA;
+  --blush-line: #E9C3CD;
+
+  --q-hot: #E04F3A;
+  --q-cs: #D8981C;
+  --q-fs: #587DC6;
+  --q-ok: #8FB08B;
+  --q-test: #A371F7;
+  --slate: #A3A6B4;
+  --slate-dark: #535872;
+
+  --ok: #3D7744;
+  --warn: #9A6200;
+  --crit: #B3261E;
+
+  --font-display: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Red Hat Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+html, body { overflow-x: clip; }
+body {
+  background-color: var(--toile);
+  background-image:
+    linear-gradient(rgba(141,166,198,.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(141,166,198,.16) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+::selection { background: var(--blush-line); color: var(--ink); }
+* { scrollbar-color: var(--seam-strong) transparent; scrollbar-width: thin; }
+a { color: inherit; text-underline-offset: 3px; text-decoration-color: var(--chalk); }
+a:hover { text-decoration-color: var(--garnet); }
+button, input { font: inherit; color: inherit; }
+input { caret-color: var(--garnet); }
+:focus-visible { outline: 2px solid var(--garnet); outline-offset: 2px; border-radius: 3px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 600; }
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+svg.lucide { width: 18px; height: 18px; stroke-width: 1.5; flex: none; }
+svg.lucide.sm { width: 15px; height: 15px; }
+.score-big, .sc, .qcell .n, .basis .big, .timer, .start .rank, .bands b, .preview-head .s { font-weight: 700; letter-spacing: -.02em; }
+
+/* review bar */
+.top { position: sticky; top: 0; z-index: 60; }
+.review { background: #1B1220; color: #EADFE6; font-size: 12.5px; }
+.review-in { position: relative; max-width: 1280px; margin: 0 auto; padding: 7px 20px; display: flex; gap: 4px 10px; align-items: center; flex-wrap: wrap; }
+.review-tag { color: #BCA9B6; font-family: var(--font-mono); font-size: 12px; }
+.review a { position: relative; z-index: 1; text-decoration: none; padding: 3px 8px; border-radius: 999px; color: #E3D6DF; transition: color .25s; }
+.review a:hover { background: #33243A; }
+.review a[aria-current="page"] { color: #fff; }
+.review a[aria-current="page"]:hover { background: transparent; }
+
+/* shell */
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+.site-head { background: var(--ink); color: #F4ECEF; }
+.site-head .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: -.01em; }
+.brand svg { width: 24px; height: 24px; }
+.head-nav { display: flex; gap: 22px; font-size: 14.5px; color: #D9C9D2; align-items: center; }
+.head-nav a { text-decoration: none; display: inline-flex; gap: 7px; align-items: center; }
+.head-nav a:hover { color: #fff; }
+.site-foot { margin-top: 72px; border-top: 1px dashed var(--chalk); padding: 22px 0 44px; font-size: 13.5px; color: var(--ink-2); }
+.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: space-between; }
+.site-foot span { display: inline-flex; gap: 8px; align-items: center; }
+.view { display: none; }
+.view.on { display: block; }
+
+/* materials */
+.panel { background: var(--linen); border: 1px solid var(--seam-strong); border-radius: 10px; box-shadow: 0 1px 0 rgba(43,27,48,.03), 0 10px 30px -18px rgba(43,27,48,.25); }
+.pinked { --z: 7px;
+  -webkit-mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top/var(--z) 51% repeat-x, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom/var(--z) 51% repeat-x;
+          mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top/var(--z) 51% repeat-x, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom/var(--z) 51% repeat-x; }
+.hatch { background: repeating-linear-gradient(135deg, #EEE6E4 0 3px, #C4B5B6 3px 4.5px); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px;
+  border: 1px solid var(--ink); background: var(--ink); color: #FFF8FA; font-weight: 600; cursor: pointer; white-space: nowrap; text-decoration: none;
+  transition: background .2s, border-color .2s, transform .2s;
+}
+.btn:hover { background: #170D1B; }
+.btn:active { transform: translateY(1px); }
+.btn.rose { background: var(--garnet); border-color: var(--garnet); }
+.btn.rose:hover { background: var(--garnet-deep); border-color: var(--garnet-deep); }
+.btn.line { background: var(--linen); color: var(--ink); border-color: var(--seam-strong); }
+.btn.line:hover { border-color: var(--ink); }
+.btn.sm { height: 36px; padding: 0 14px; font-size: 14px; }
+.btn[disabled] { background: var(--seam); border-color: var(--seam); color: var(--ink-2); cursor: not-allowed; }
+.chip { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px 0 8px; border-radius: 999px; font-size: 12.5px; font-weight: 600; border: 1px solid var(--seam-strong); background: var(--linen); white-space: nowrap; }
+.chip .sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+.chip.test { color: #6A3EC2; border-color: #D3BDF9; background: #F7F2FF; }
+.chip.fresh { color: var(--ok); border-color: #B9D3B4; background: #F0F6EE; }
+.note { font-family: var(--font-mono); font-size: 12px; color: #6B44BC; border: 1px dashed #BDA5EC; background: #F7F2FF; padding: 2px 8px; border-radius: 6px; display: inline-block; }
+.muted { color: var(--ink-2); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* field */
+.field-row { display: flex; gap: 10px; }
+.field { flex: 1; display: flex; align-items: center; height: 56px; border: 1px solid var(--ink); border-radius: 999px; background: var(--linen); padding: 0 20px; gap: 12px; transition: box-shadow .2s; }
+.field:focus-within { box-shadow: 0 0 0 4px var(--blush); border-color: var(--garnet); }
+.field .lucide { color: var(--ink-3); }
+.field input { border: 0; outline: 0; background: transparent; width: 100%; font-family: var(--font-mono); font-size: 15px; }
+.field input::placeholder { color: var(--ink-3); }
+.field.bad { border-color: var(--crit); }
+.field-msg { min-height: 24px; margin: 8px 0 0 20px; font-size: 14px; color: var(--crit); display: flex; gap: 8px; align-items: center; }
+.field-row .btn { height: 56px; padding: 0 26px; font-size: 16px; }
+
+/* landing */
+.land { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 56px; padding: 72px 0 8px; align-items: center; }
+.land h1 { font-family: var(--font-display); font-size: clamp(40px, 5vw, 64px); line-height: 1.05; letter-spacing: -.035em; font-weight: 700; }
+.land h1 .stitch { text-decoration: underline dashed var(--garnet); text-decoration-thickness: 2px; text-underline-offset: 10px; }
+.lede { font-size: 18.5px; color: var(--ink-2); max-width: 33em; margin: 22px 0 30px; }
+.examples { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+.examples .label { font-size: 13.5px; color: var(--ink-2); margin-right: 2px; }
+.ex { display: inline-flex; gap: 6px; align-items: center; font-family: var(--font-mono); font-size: 13px; height: 32px; padding: 0 12px; border: 1px solid var(--seam-strong); background: var(--linen); border-radius: 999px; cursor: pointer; transition: border-color .2s, background .2s; }
+.ex:hover { border-color: var(--garnet); background: var(--blush); }
+.scope { margin-top: 22px; font-size: 13.5px; color: var(--ink-2); display: grid; gap: 6px; }
+.scope span { display: inline-flex; gap: 8px; align-items: center; }
+.sheet-preview { padding: 18px 18px 14px; position: relative; transform: rotate(-1.2deg); }
+.sheet-preview::before { content: ""; position: absolute; left: 50%; top: -9px; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #F2A1B6, var(--garnet) 60%); box-shadow: 0 2px 3px rgba(0,0,0,.25); transform: translateX(-50%); }
+.preview-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; gap: 10px; }
+.preview-head .repo { font-family: var(--font-mono); font-weight: 600; }
+.preview-head .s { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--ok); }
+.swatches { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; margin: 56px 0 0; }
+.swatch-card { display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: start; padding: 16px; }
+.swatch-card .sw { height: 54px; border-radius: 2px; }
+.swatch-card h3 { font-size: 16px; }
+.swatch-card p { margin: 3px 0 0; font-size: 14px; color: var(--ink-2); }
+
+/* progress */
+.stage { max-width: 660px; margin: 80px auto 0; }
+.stage-repo { display: inline-flex; gap: 8px; align-items: center; font-family: var(--font-mono); font-size: 15px; color: var(--ink-2); }
+.stage h2 { font-family: var(--font-display); font-size: 40px; letter-spacing: -.02em; margin: 8px 0 26px; }
+.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.steps li { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: var(--linen); border: 1px solid var(--seam); border-radius: 10px; font-size: 16px; color: var(--ink-2); transition: border-color .3s, color .3s; }
+.steps li .st { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--seam-strong); color: var(--ink-3); flex: none; }
+.steps li.now { color: var(--ink); border-color: var(--ink); }
+.steps li.now .st { border-color: var(--garnet); color: var(--garnet); background: var(--blush); }
+.steps li.done .st { background: var(--ink); border-color: var(--ink); color: #fff; }
+.steps li .state { margin-left: auto; font-size: 13px; color: var(--ink-3); }
+.sewing { margin-top: 28px; height: 150px; border-radius: 10px; background: var(--linen); border: 1px solid var(--seam); overflow: hidden; }
+.sewing svg { width: 100%; height: 100%; display: block; }
+.sewing .stitch-path { fill: none; stroke: var(--garnet); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.sewing .chalk-path { fill: none; stroke: var(--chalk-soft); stroke-width: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .sewing .stitch-path { animation: sew 3.2s linear infinite; }
+}
+@keyframes sew { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -220; } }
+.job-grid { display: grid; grid-template-columns: minmax(0,1fr) 310px; gap: 18px; }
+.job-card { padding: 24px; }
+.timer { font-family: var(--font-display); font-size: 68px; font-weight: 600; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
+.timer-sub { font-size: 14px; color: var(--ink-2); margin-top: 6px; display: flex; gap: 6px; align-items: center; }
+.track { list-style: none; padding: 0; margin: 22px 0 0; }
+.track li { display: grid; grid-template-columns: 26px 1fr auto; gap: 12px; padding: 11px 0; border-top: 1px dashed var(--chalk-soft); align-items: center; font-size: 15px; }
+.track .t { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-3); }
+.track .pip { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--seam-strong); color: var(--ink-3); }
+.track .done .pip { background: var(--ink); border-color: var(--ink); color: #fff; }
+.track .now .pip { border-color: var(--garnet); color: var(--garnet); background: var(--blush); }
+.track .todo { color: var(--ink-2); }
+.side-card { padding: 20px; display: grid; gap: 12px; align-content: start; font-size: 14.5px; color: var(--ink-2); }
+.side-card h3 { font-size: 16px; color: var(--ink); display: flex; gap: 8px; align-items: center; }
+.linkbox { display: flex; gap: 6px; }
+.linkbox code { flex: 1; font-family: var(--font-mono); font-size: 12.5px; background: var(--toile); border: 1px solid var(--seam); padding: 8px 10px; border-radius: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slow { margin-top: 12px; font-size: 14px; color: var(--warn); display: none; gap: 8px; align-items: flex-start; }
+.slow.show { display: flex; }
+
+/* report shell */
+.repo-strip { padding: 30px 0 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: flex-end; }
+.repo-strip h1 { font-family: var(--font-display); font-size: clamp(30px, 3.6vw, 42px); font-weight: 600; letter-spacing: -.02em; line-height: 1.05; }
+.repo-strip h1 span { color: var(--ink-3); font-weight: 400; }
+.meta-line { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; color: var(--ink-2); margin-top: 10px; align-items: center; }
+.meta-line > span, .meta-line > a { display: inline-flex; gap: 6px; align-items: center; }
+.meta-line .num { font-size: 13px; }
+.strip-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.tab-sentinel { height: 0; }
+.tabbar { position: sticky; top: var(--top-h, 0px); z-index: 40; margin-top: 22px; }
+.tabbar::before { content: ""; position: absolute; top: 0; bottom: 0; left: calc(50% - 50vw); right: calc(50% - 50vw); z-index: -1;
+  background: rgba(246,241,239,.97); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--seam-strong); box-shadow: 0 10px 24px -18px rgba(43,27,48,.5); opacity: 0; transition: opacity .25s ease; }
+.tabbar.stuck::before { opacity: 1; }
+.tabs { position: relative; display: flex; gap: 4px; border-bottom: 1px dashed var(--chalk); overflow-x: auto; scrollbar-width: none; transition: border-color .25s; }
+.tabbar.stuck .tabs { border-bottom-color: transparent; }
+.glider { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 0; border-radius: 999px;
+  transition: transform .4s cubic-bezier(.22,.9,.24,1), width .4s cubic-bezier(.22,.9,.24,1), height .4s cubic-bezier(.22,.9,.24,1), opacity .2s; }
+.glider.no-anim { transition: none; }
+.seg > .glider { background: var(--ink); }
+.review-in > .glider { background: var(--garnet); }
+.tabs > .glider { top: auto; bottom: 0; height: 2px; border-radius: 2px; background: var(--garnet); }
+@media (prefers-reduced-motion: reduce) { .glider { transition: none; } }
+.tab { z-index: 1; display: inline-flex; gap: 8px; align-items: center; padding: 12px 16px 13px; border: 0; background: none; cursor: pointer; font-size: 15px; font-weight: 600; color: var(--ink-2); position: relative; white-space: nowrap; }
+.tab:hover { color: var(--ink); }
+.tab .count { font-family: var(--font-mono); font-size: 12px; font-weight: 500; background: var(--toile); border: 1px solid var(--seam); border-radius: 999px; padding: 0 7px; }
+.tab[aria-selected="true"] { color: var(--ink); }
+.tab .lucide { transition: color .25s; }
+.tab[aria-selected="true"] .lucide { color: var(--garnet); }
+.tabpanel { padding-top: 22px; }
+@media (prefers-reduced-motion: no-preference) { .tabpanel.enter > * { animation: panel-in .32s cubic-bezier(.22,.9,.24,1); } }
+@keyframes panel-in { from { opacity: .35; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.map-grid > .tag, .explorer > .tag { position: sticky; top: calc(var(--top-h, 0px) + 72px); }
+
+/* overview */
+.ov-top { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 18px; }
+.score-panel { padding: 24px 26px 22px; display: grid; gap: 16px; align-content: start; }
+.score-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.score-head h2, .matrix-panel h2 { font-size: 15px; color: var(--ink-2); font-weight: 600; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.score-big { font-family: var(--font-display); font-size: 108px; font-weight: 600; line-height: .86; letter-spacing: -.03em; font-variant-numeric: lining-nums tabular-nums; }
+.score-big small { font-family: var(--font-body); font-size: 20px; color: var(--ink-3); font-weight: 500; letter-spacing: 0; margin-left: 6px; }
+.band { display: inline-flex; gap: 6px; align-items: center; font-weight: 700; font-size: 17px; }
+.band.ok { color: var(--ok); } .band.warn { color: var(--warn); } .band.crit { color: var(--crit); }
+.tape { position: relative; height: 46px; background: var(--blush); border: 1px solid var(--blush-line); border-radius: 3px; }
+.tape .ticks { position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(43,27,48,.55) 1px, transparent 1px) 0 0 / 10% 18px repeat-x,
+    linear-gradient(90deg, rgba(43,27,48,.4) 1px, transparent 1px) 0 0 / 5% 11px repeat-x,
+    linear-gradient(90deg, rgba(43,27,48,.25) 1px, transparent 1px) 0 0 / 1% 6px repeat-x; }
+.tape .lbl { position: absolute; top: 19px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); transform: translateX(-50%); }
+.tape .lbl.first { transform: translateX(3px); } .tape .lbl.last { transform: translateX(calc(-100% - 3px)); }
+.tape .zones { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; display: flex; }
+.tape .zones i:nth-child(1) { width: 50%; background: #E9A99F; } .tape .zones i:nth-child(2) { width: 30%; background: #E8C77C; } .tape .zones i:nth-child(3) { width: 20%; background: #A9C8A4; }
+.tape .needle { position: absolute; top: -10px; bottom: -10px; width: 2px; background: var(--garnet); transform: translateX(-1px); }
+.tape .needle::before { content: ""; position: absolute; top: -6px; left: 50%; width: 12px; height: 12px; border-radius: 50%; transform: translateX(-50%); background: radial-gradient(circle at 35% 35%, #F4A9BC, var(--garnet) 62%); box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+.zone-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-2); }
+.zone-legend span { display: inline-flex; gap: 6px; align-items: center; }
+.zone-legend i { width: 14px; height: 4px; border-radius: 2px; display: inline-block; }
+.verdict-text { font-size: 18px; line-height: 1.45; max-width: 34em; margin: 0; }
+.verdict-text b { color: var(--q-hot); }
+.score-foot { font-size: 13.5px; color: var(--ink-2); display: flex; gap: 8px; align-items: flex-start; }
+.matrix-panel { padding: 20px 22px 18px; display: grid; gap: 12px; }
+.matrix-wrap { display: grid; grid-template-columns: 22px minmax(0,1fr); grid-template-rows: minmax(0,1fr) 22px; gap: 8px; }
+.axis-y { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 12.5px; color: var(--ink-2); display: flex; align-items: center; justify-content: center; gap: 4px; }
+.axis-x { grid-column: 2; font-size: 12.5px; color: var(--ink-2); display: flex; align-items: center; justify-content: center; gap: 4px; }
+.matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.qcell { text-align: left; border: 1px solid var(--seam-strong); background: var(--linen); border-radius: 8px; padding: 12px 12px 12px 10px; cursor: pointer;
+  display: grid; grid-template-columns: 30px auto 1fr; gap: 2px 12px; align-items: center; min-height: 92px; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.qcell:hover { border-color: var(--ink); box-shadow: 0 8px 20px -14px rgba(43,27,48,.5); transform: translateY(-1px); }
+.qcell .sw { grid-row: span 2; width: 30px; height: 64px; border-radius: 2px; }
+.qcell .n { font-family: var(--font-display); font-size: 44px; font-weight: 600; line-height: 1; grid-row: span 2; min-width: 1.1em; font-variant-numeric: lining-nums; }
+.qcell .l { font-weight: 700; font-size: 15px; }
+.qcell .s { font-size: 13px; color: var(--ink-2); }
+.qcell.zero .n { color: var(--ink-3); }
+.matrix-extra { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; color: var(--ink-2); }
+.matrix-extra span { display: inline-flex; gap: 7px; align-items: center; }
+.matrix-extra i { width: 12px; height: 12px; border-radius: 2px; display: inline-block; flex: none; }
+.block-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin: 44px 0 14px; }
+.block-head h2 { font-family: var(--font-display); font-size: 28px; letter-spacing: -.015em; }
+.block-head p { margin: 4px 0 0; color: var(--ink-2); font-size: 14.5px; }
+.start { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.start button { width: 100%; text-align: left; cursor: pointer; display: grid; grid-template-columns: 34px minmax(0, 1.25fr) 96px minmax(0, 1.75fr) 22px; gap: 18px; padding: 16px 18px; align-items: start;
+  background: var(--linen); border: 1px solid var(--seam-strong); border-radius: 10px; transition: border-color .2s, box-shadow .2s; }
+.start button:hover { border-color: var(--ink); box-shadow: 0 10px 24px -18px rgba(43,27,48,.55); }
+.start .rank { font-family: var(--font-display); font-size: 22px; color: var(--ink-3); line-height: 1.1; font-variant-numeric: lining-nums; }
+.fname { font-family: var(--font-mono); font-weight: 600; font-size: 15px; word-break: break-all; }
+.fdir { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-3); word-break: break-all; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.sc { font-family: var(--font-display); font-size: 34px; font-weight: 600; line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
+.sc.ok { color: var(--ok); } .sc.warn { color: var(--warn); } .sc.crit { color: var(--crit); }
+.sc small { display: block; font-family: var(--font-body); font-size: 12.5px; font-weight: 600; margin-top: 6px; }
+.why { font-size: 14.5px; }
+.why .act { display: flex; gap: 6px; color: var(--ink-2); margin-top: 8px; font-size: 13.5px; align-items: flex-start; }
+.why .act .lucide { color: var(--garnet); margin-top: 2px; }
+.go { color: var(--ink-3); padding-top: 4px; }
+.start button:hover .go { color: var(--garnet); }
+.basis { margin-top: 44px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.5fr); }
+.basis > div { padding: 18px 20px; display: grid; gap: 4px; align-content: start; }
+.basis > div + div { border-left: 1px dashed var(--chalk-soft); }
+.basis .big { font-family: var(--font-display); font-size: 32px; font-weight: 600; letter-spacing: -.01em; font-variant-numeric: lining-nums; line-height: 1.1; }
+.basis .lbl { font-size: 13.5px; color: var(--ink-2); display: flex; gap: 7px; align-items: center; }
+.caveats { margin-top: 12px; display: grid; gap: 8px; }
+.caveat { display: flex; gap: 12px; padding: 12px 16px; font-size: 14px; background: var(--linen); border: 1px solid var(--seam-strong); border-radius: 10px; align-items: flex-start; }
+.caveat .lucide { color: var(--warn); margin-top: 1px; }
+.caveat.info .lucide { color: var(--slate-dark); }
+.disclaimer { margin-top: 14px; font-size: 13.5px; color: var(--ink-2); padding: 14px 16px; border: 1px dashed var(--chalk); border-radius: 10px; display: flex; gap: 10px; align-items: flex-start; }
+
+/* map */
+.map-grid { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 18px; align-items: start; }
+.map-panel { padding: 14px; }
+.map-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 12px; }
+.seg { display: inline-flex; border: 1px solid var(--seam-strong); border-radius: 999px; padding: 3px; background: var(--toile); }
+.seg { position: relative; }
+.seg button { position: relative; z-index: 1; transition: color .25s; border: 0; background: none; padding: 6px 14px; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 999px; display: inline-flex; gap: 6px; align-items: center; color: var(--ink-2); }
+.seg button[aria-pressed="true"] { color: #FFF8FA; }
+.crumbs { font-family: var(--font-mono); font-size: 13px; color: var(--ink-2); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; min-height: 30px; }
+.crumbs > span { display: inline-flex; gap: 6px; align-items: center; }
+.crumbs button { border: 0; background: none; padding: 0; text-decoration: underline; text-decoration-color: var(--chalk); cursor: pointer; font-family: var(--font-mono); font-size: 13px; display: inline-flex; gap: 5px; align-items: center; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-2); margin-top: 12px; align-items: center; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 13px; height: 13px; border-radius: 2px; display: inline-block; }
+.legend .hint { margin-left: auto; color: var(--ink-3); }
+.map-host { position: relative; width: 100%; }
+.map-host svg { display: block; width: 100%; height: auto; }
+.map-host .cell { cursor: pointer; transition: opacity .25s; }
+.map-host .cell:hover { stroke: var(--ink); stroke-width: 1.5; }
+.map-host .cell.sel { stroke: var(--ink); stroke-width: 3; }
+.map-host .grp-label { font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2); }
+.map-host .grp-hit { cursor: zoom-in; }
+.map-host .cell-label { font-family: var(--font-mono); font-size: 11.5px; pointer-events: none; }
+.tip { position: absolute; pointer-events: none; z-index: 5; background: var(--ink); color: #F6EEF1; border-radius: 10px; padding: 12px 14px; font-size: 13px; width: 270px; display: none; box-shadow: 0 12px 28px -10px rgba(27,18,32,.5); }
+.tip b { font-family: var(--font-mono); font-size: 13.5px; word-break: break-all; }
+.tip .d { color: #CDBBC6; font-size: 12px; word-break: break-all; font-family: var(--font-mono); }
+.tip .r { display: flex; justify-content: space-between; gap: 10px; margin-top: 5px; color: #D9CBD3; }
+.tip .r span:last-child { color: #fff; font-family: var(--font-mono); }
+
+/* detail tag */
+.tag { padding: 20px; display: grid; gap: 16px; }
+.tag-head { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; }
+.tag .fname { font-size: 18px; }
+.tag-score { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 10px; background: var(--toile); border: 1px solid var(--seam); }
+.tag-score .sc { font-size: 50px; }
+.tag-score .band { font-size: 15px; }
+.tag-score .muted { font-size: 13px; display: block; }
+.metrics { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.metric { padding: 12px 14px; border: 1px solid var(--seam); border-radius: 10px; background: var(--linen); display: grid; gap: 3px; align-content: start; }
+.metric dt { font-size: 12.5px; color: var(--ink-2); display: flex; gap: 6px; align-items: center; }
+.metric dd { margin: 0; font-family: var(--font-mono); font-weight: 600; font-size: 19px; }
+.metric .sub { font-size: 12.5px; color: var(--ink-2); }
+.metric.wide { grid-column: 1 / -1; }
+.cc-rule { position: relative; height: 10px; border-radius: 2px; margin-top: 6px; background: linear-gradient(90deg, rgba(43,27,48,.3) 1px, transparent 1px) 0 0 / 10% 100% repeat-x, var(--blush); border: 1px solid var(--blush-line); }
+.cc-rule .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); border-radius: 1px; }
+.cc-rule .lim { position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--garnet); }
+.add { color: var(--ok); } .del { color: var(--crit); }
+.next { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 14px; color: var(--ink-2); }
+.next li { display: flex; gap: 8px; align-items: flex-start; }
+.next .lucide { color: var(--garnet); margin-top: 2px; }
+.tag h2 { font-size: 14px; display: flex; gap: 7px; align-items: center; }
+.na-box { display: flex; gap: 10px; align-items: flex-start; padding: 14px; border-radius: 10px; border: 1px dashed var(--seam-strong); font-size: 14px; color: var(--ink-2); }
+.tag-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* files explorer */
+.explorer { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 18px; align-items: start; }
+.tree-panel { display: flex; flex-direction: column; height: calc(100vh - var(--top-h, 0px) - 96px); min-height: 480px; max-height: 820px; overflow: hidden; position: sticky; top: calc(var(--top-h, 0px) + 72px); }
+.tree-tools { padding: 14px; display: grid; gap: 10px; border-bottom: 1px dashed var(--chalk-soft); }
+.search { display: flex; align-items: center; gap: 8px; height: 40px; border: 1px solid var(--seam-strong); background: var(--toile); border-radius: 999px; padding: 0 14px; }
+.search:focus-within { border-color: var(--garnet); box-shadow: 0 0 0 3px var(--blush); }
+.search .lucide { color: var(--ink-3); }
+.search input { border: 0; outline: 0; background: none; font-family: var(--font-mono); font-size: 13.5px; width: 100%; }
+.search input::placeholder { color: var(--ink-3); }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.filters button { height: 30px; padding: 0 11px; border: 1px solid var(--seam-strong); background: var(--linen); border-radius: 999px; cursor: pointer; font-size: 13px; font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+.filters button .c { font-family: var(--font-mono); color: var(--ink-3); font-weight: 500; }
+.filters button[aria-pressed="true"] { background: var(--ink); color: #FFF8FA; border-color: var(--ink); }
+.filters button[aria-pressed="true"] .c { color: #D9C9D2; }
+.filters button[disabled] { opacity: .5; cursor: default; }
+.tools-row { display: flex; justify-content: space-between; gap: 8px; align-items: center; flex-wrap: wrap; }
+.focus-pill { display: none; align-items: center; gap: 4px; font-size: 13px; }
+.focus-pill.show { display: flex; }
+.focus-pill button { border: 0; background: none; cursor: pointer; display: inline-flex; color: var(--ink-2); padding: 4px; border-radius: 50%; }
+.focus-pill button:hover { color: var(--ink); background: var(--toile); }
+.tree { overflow-y: auto; padding: 6px 6px 14px; flex: 1; }
+.folder { margin-top: 4px; }
+.folder-row { width: 100%; display: grid; grid-template-columns: 16px 16px minmax(0,1fr) auto; gap: 7px; align-items: center; padding: 8px; border: 0; background: none; cursor: pointer; border-radius: 8px; text-align: left; color: var(--ink-2); }
+.folder-row:hover { background: var(--toile); color: var(--ink); }
+.folder-row .p { font-family: var(--font-mono); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: rtl; text-align: left; }
+.folder-row .p bdi { direction: ltr; }
+.folder-row .cnt { font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); display: inline-flex; gap: 8px; align-items: center; }
+.mix { display: inline-flex; width: 54px; height: 6px; border-radius: 3px; overflow: hidden; background: var(--seam); }
+.mix i { height: 100%; display: block; }
+.folder-row .chev { display: inline-flex; color: var(--ink-3); transition: transform .2s; }
+.folder.closed .chev { transform: rotate(-90deg); }
+.folder.closed .files { display: none; }
+.files { list-style: none; margin: 0; padding: 0 0 0 22px; }
+.frow { width: 100%; display: grid; grid-template-columns: 12px minmax(0,1fr) auto auto; gap: 9px; align-items: center; padding: 7px 10px; border: 0; background: none; cursor: pointer; border-radius: 8px; text-align: left; position: relative; }
+.files .frow::before { content: ""; position: absolute; left: -12px; top: 0; bottom: 0; border-left: 1px dashed var(--chalk-soft); }
+.flat .frow::before { display: none; }
+.frow:hover { background: var(--toile); }
+.frow[aria-selected="true"] { background: var(--blush); }
+.frow[aria-selected="true"] .n { color: var(--garnet-deep); }
+.frow .sw { width: 12px; height: 12px; border-radius: 2px; }
+.frow .n { font-family: var(--font-mono); font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.frow .n small { display: block; font-size: 11.5px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; }
+.frow .marks { display: inline-flex; gap: 4px; color: var(--ink-3); }
+.frow .marks .pin { color: var(--garnet); display: inline-flex; }
+.frow .marks .flask { color: #7C4DD8; display: inline-flex; }
+.frow .s { font-family: var(--font-mono); font-size: 13px; font-weight: 600; min-width: 26px; text-align: right; }
+.frow .s.ok { color: var(--ok); } .frow .s.warn { color: var(--warn); } .frow .s.crit { color: var(--crit); } .frow .s.none { color: var(--ink-3); font-weight: 400; }
+.tree-empty { padding: 30px 18px; text-align: center; color: var(--ink-2); display: grid; gap: 10px; justify-items: center; }
+.tree-foot { padding: 10px 14px; border-top: 1px dashed var(--chalk-soft); font-size: 12.5px; color: var(--ink-2); display: flex; gap: 14px; flex-wrap: wrap; }
+.tree-foot kbd { font-family: var(--font-mono); font-size: 11.5px; border: 1px solid var(--seam-strong); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--linen); }
+.tree-foot [data-shown] { margin-left: auto; }
+
+/* states */
+.states-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; margin-top: 20px; }
+.state { padding: 20px; display: grid; gap: 12px; align-content: start; }
+.state .ic { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--blush); color: var(--garnet); }
+.state .ic.calm { background: #EEF5EC; color: var(--ok); }
+.state .ic.wait { background: #FBF1DD; color: var(--warn); }
+.state .msg { font-size: 16px; font-weight: 700; margin: 0; }
+.state .sub { font-size: 14px; color: var(--ink-2); margin: 0; }
+.state .field { height: 46px; }
+.state .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.state .field-msg { margin: 0 0 0 16px; }
+.turnstile { height: 66px; border: 1px dashed var(--seam-strong); border-radius: 10px; display: flex; align-items: center; gap: 12px; padding: 0 16px; font-size: 13.5px; color: var(--ink-2); background: var(--toile); }
+.big-empty { padding: 40px; display: grid; gap: 16px; justify-items: start; max-width: 740px; }
+.big-empty h2 { font-family: var(--font-display); font-size: 36px; letter-spacing: -.02em; }
+
+/* how it works */
+.prose { max-width: 780px; }
+.prose h1 { font-family: var(--font-display); font-size: 52px; letter-spacing: -.025em; margin: 56px 0 14px; }
+.prose h2 { font-family: var(--font-display); font-size: 26px; margin: 40px 0 8px; display: flex; gap: 10px; align-items: center; }
+.prose h2 .lucide { color: var(--garnet); width: 22px; height: 22px; }
+.prose p { color: var(--ink-2); font-size: 17px; max-width: 65ch; }
+.formula { font-family: var(--font-mono); font-size: 14px; background: var(--linen); border: 1px solid var(--seam-strong); padding: 14px 16px; border-radius: 10px; overflow-x: auto; }
+.bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+.bands div { padding: 14px; background: var(--linen); border: 1px solid var(--seam-strong); border-radius: 10px; display: grid; gap: 2px; }
+.bands b { font-family: var(--font-display); font-size: 24px; font-variant-numeric: lining-nums; }
+.bands span { display: inline-flex; gap: 6px; align-items: center; font-weight: 600; }
+
+@media (max-width: 1080px) {
+  .land, .ov-top, .map-grid, .job-grid, .explorer { grid-template-columns: 1fr; }
+  .tree-panel { height: 60vh; min-height: 0; position: static; }
+  .map-grid > .tag, .explorer > .tag { position: static; }
+  .basis { grid-template-columns: repeat(3, 1fr); }
+  .basis > div:last-child { grid-column: 1 / -1; border-left: 0; border-top: 1px dashed var(--chalk-soft); }
+  .swatches { grid-template-columns: 1fr 1fr; }
+  .sheet-preview { transform: none; }
+}
+@media (max-width: 640px) {
+  .wrap { padding: 0 16px; }
+  .field-row { flex-direction: column; }
+  .start button { grid-template-columns: 30px minmax(0,1fr) 72px; }
+  .start .why { grid-column: 2 / -1; } .start .go { display: none; }
+  .score-big { font-size: 80px; }
+  .basis { grid-template-columns: 1fr; }
+  .basis > div + div { border-left: 0; border-top: 1px dashed var(--chalk-soft); }
+  .swatches, .bands, .metrics { grid-template-columns: 1fr; }
+  .legend .hint { margin-left: 0; }
+  .head-nav .lbl { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="top" data-top>
+<nav class="review" aria-label="Design preview pages">
+  <div class="review-in glide-host" data-glide="pill">
+    <span class="review-tag">PREVIEW</span>
+    <a href="#landing">Landing</a>
+    <a href="#analyzing">Quick analysis</a>
+    <a href="#queued">Long analysis</a>
+    <a href="#report">Report · Overview</a>
+    <a href="#report-map">Report · Map</a>
+    <a href="#report-files">Report · Files</a>
+    <a href="#small-repo">Small repository</a>
+    <a href="#states">Errors</a>
+    <a href="#not-analyzed">No report yet</a>
+    <a href="#how-it-works">How it works</a>
+    <span class="review-tag">report = real API data, square/javapoet</span>
+  </div>
+</nav>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#landing" aria-label="HuoCode home">
+      <svg viewBox="394 260 465 466" aria-hidden="true"><defs><linearGradient id="em" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#E0503A"/><stop offset="100%" stop-color="#F08AA6"/></linearGradient></defs><g fill="url(#em)"><rect x="588" y="280" width="77" height="273" rx="38"/><rect x="430" y="370" width="80" height="150" rx="38" transform="rotate(-30 470 445)"/><rect x="740" y="370" width="80" height="150" rx="38" transform="rotate(30 780 445)"/><rect x="420" y="560" width="190" height="80" rx="38" transform="rotate(-34 515 600)"/><rect x="645" y="560" width="190" height="80" rx="38" transform="rotate(34 740 600)"/></g></svg>
+      HuoCode
+    </a>
+    <nav class="head-nav" aria-label="Main">
+      <a href="#how-it-works"><i data-lucide="book-open"></i><span class="lbl">How it works</span></a>
+      <a href="https://github.com/huocode-bot/huocode"><i data-lucide="github"></i><span class="lbl">Source</span></a>
+    </nav>
+  </div>
+</header>
+</div>
+
+<main>
+
+<section class="view" data-view="landing">
+  <div class="wrap">
+    <div class="land">
+      <div>
+        <h1>Find the files where your next change is <span class="stitch">most likely to hurt</span>.</h1>
+        <p class="lede">Paste a public GitHub repository. HuoCode crosses how complex each file is with how much it changes, and shows you which ones to review first.</p>
+        <form id="land-form" novalidate>
+          <label for="repo-input" class="muted" style="display:block;font-size:14px;font-weight:600;margin:0 0 8px 20px">GitHub repository</label>
+          <div class="field-row">
+            <div class="field" id="land-field">
+              <i data-lucide="github"></i>
+              <input id="repo-input" name="repo" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="owner/repo or https://github.com/owner/repo" aria-describedby="land-msg">
+            </div>
+            <button class="btn rose" type="submit"><i data-lucide="scan-search"></i>Map this repository</button>
+          </div>
+          <div class="field-msg" id="land-msg" role="alert"></div>
+        </form>
+        <div class="examples">
+          <span class="label">Try one</span>
+          <button class="ex" type="button" data-ex="square/javapoet"><i data-lucide="git-branch" class="sm"></i>square/javapoet</button>
+          <button class="ex" type="button" data-ex="spring-projects/spring-petclinic"><i data-lucide="git-branch" class="sm"></i>spring-projects/spring-petclinic</button>
+          <button class="ex" type="button" data-ex="FasterXML/jackson-annotations"><i data-lucide="git-branch" class="sm"></i>FasterXML/jackson-annotations</button>
+          <button class="ex" type="button" data-ex="apache/dubbo"><i data-lucide="git-branch" class="sm"></i>apache/dubbo</button>
+        </div>
+        <div class="scope">
+          <span><i data-lucide="coffee" class="sm"></i>Java only for now. Other files are listed, never scored.</span>
+          <span><i data-lucide="link" class="sm"></i>Shortcut: replace <b class="num" style="font-weight:600">github.com</b> with <b class="num" style="font-weight:600">huocode.app</b> in any repository URL.</span>
+        </div>
+      </div>
+      <div class="panel sheet-preview" aria-label="Example result for square/javapoet">
+        <div class="preview-head"><span class="repo">square/javapoet</span><span class="s">81</span></div>
+        <div class="map-host" id="land-map"></div>
+        <div class="legend" id="land-legend"></div>
+      </div>
+    </div>
+    <h2 class="sr-only">How to read a result</h2>
+    <div class="swatches">
+      <div class="panel swatch-card"><span class="sw pinked" style="background:var(--q-hot)"></span><div><h3>Hotspot</h3><p>Complex and changing a lot. Review these first.</p></div></div>
+      <div class="panel swatch-card"><span class="sw pinked" style="background:var(--q-cs)"></span><div><h3>Complex but stable</h3><p>Hard to read, rarely touched. Lower urgency.</p></div></div>
+      <div class="panel swatch-card"><span class="sw pinked" style="background:var(--q-fs)"></span><div><h3>Changes often</h3><p>Busy but simple. Generally fine.</p></div></div>
+      <div class="panel swatch-card"><span class="sw pinked" style="background:var(--q-ok)"></span><div><h3>Calm</h3><p>Simple and stable. Nothing to flag.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" data-view="analyzing">
+  <div class="wrap">
+    <div class="stage">
+      <span class="stage-repo"><i data-lucide="git-branch" class="sm"></i><span id="sync-repo">square/javapoet</span></span>
+      <h2>Mapping the repository</h2>
+      <ol class="steps" id="sync-steps">
+        <li><span class="st"><i data-lucide="download" class="sm"></i></span>Fetching the files<span class="state"></span></li>
+        <li><span class="st"><i data-lucide="history" class="sm"></i></span>Reading the change history<span class="state"></span></li>
+        <li><span class="st"><i data-lucide="ruler" class="sm"></i></span>Measuring the code<span class="state"></span></li>
+      </ol>
+      <div class="sewing" aria-hidden="true" data-sew></div>
+      <p class="score-foot" style="margin-top:14px"><i data-lucide="clock" class="sm"></i>Usually under 20 seconds. The report opens by itself.</p>
+      <p><span class="note">dev: the quick path reports no real progress; steps advance on a timer with a minimum display time</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="view" data-view="queued">
+  <div class="wrap">
+    <div class="stage" style="max-width:1000px;margin-top:56px">
+      <span class="stage-repo"><i data-lucide="git-branch" class="sm"></i>apache/dubbo</span>
+      <h2>A large repository, mapping in progress</h2>
+      <div class="job-grid">
+        <div class="panel job-card">
+          <div class="timer" id="job-timer">0:12</div>
+          <div class="timer-sub"><i data-lucide="hourglass" class="sm"></i>elapsed · usually about 45 seconds</div>
+          <ol class="track">
+            <li class="done"><span class="pip"><i data-lucide="check" class="sm"></i></span><span>Request received</span><span class="t">0:00</span></li>
+            <li class="now"><span class="pip"><i data-lucide="scissors" class="sm"></i></span><span>Measuring every file</span><span class="t">since 0:04</span></li>
+            <li class="todo"><span class="pip"><i data-lucide="file-check-2" class="sm"></i></span><span>Report ready, opens automatically</span><span class="t">next</span></li>
+          </ol>
+          <p class="slow" id="job-slow"><i data-lucide="info" class="sm"></i>Taking longer than usual. Very large repositories can need up to 15 minutes. You can keep this page open or come back later.</p>
+          <div class="sewing" aria-hidden="true" data-sew style="height:120px"></div>
+        </div>
+        <aside class="panel side-card">
+          <h3><i data-lucide="door-open"></i>You can close this tab</h3>
+          <p style="margin:0">The work keeps going. This link brings you back to it, or to the finished report.</p>
+          <div class="linkbox"><code>huocode.app/analyze/apache/dubbo?job=7f3c…</code><button class="btn line sm" type="button" data-copy="https://huocode.app/analyze/apache/dubbo?job=7f3c2a1e"><i data-lucide="copy" class="sm"></i>Copy</button></div>
+          <p style="margin:0">When it's ready, this tab's title turns into <b class="num" style="font-weight:600">✓ apache/dubbo</b>.</p>
+          <a href="#report" class="btn sm" style="justify-self:start"><i data-lucide="fast-forward" class="sm"></i>Simulate: finished</a>
+          <span class="note">dev: 202 → poll every 4 s; stop at 15 min with "Run again"; reload resumes from ?job=</span>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="view" data-view="report"><div class="wrap" id="report-root"></div></section>
+<section class="view" data-view="small-repo"><div class="wrap" id="small-root"></div></section>
+
+<section class="view" data-view="states">
+  <div class="wrap">
+    <div class="block-head" style="margin-top:36px"><div><h2>Errors and edge cases</h2><p>Every code the API can return, the way a visitor meets it. Purple notes name the backend code.</p></div></div>
+    <div class="states-grid">
+      <div class="panel state"><span class="note">400 INVALID_REPO_URL · caught before sending</span>
+        <div class="field bad"><i data-lucide="github"></i><input value="gitlab.com/foo/bar" aria-label="Repository" readonly></div>
+        <div class="field-msg"><i data-lucide="circle-alert" class="sm"></i>Use a GitHub address like github.com/owner/repo, or just owner/repo.</div></div>
+      <div class="panel state"><span class="note">404 REPO_NOT_FOUND_OR_PRIVATE</span>
+        <div class="field bad"><i data-lucide="github"></i><input value="acme/secret-billing" aria-label="Repository" readonly></div>
+        <div class="field-msg"><i data-lucide="lock" class="sm"></i>We can't find this repository. It may be private or misspelled.</div></div>
+      <div class="panel state"><span class="note">413 REPO_TOO_LARGE</span><span class="ic"><i data-lucide="package-x"></i></span>
+        <p class="msg">elastic/elasticsearch is too large to map for now.</p><p class="sub">HuoCode handles up to 3,000 source files per repository. Nothing partial is ever shown.</p>
+        <div class="row"><button class="btn line sm" type="button"><i data-lucide="arrow-left" class="sm"></i>Try another repository</button></div></div>
+      <div class="panel state"><span class="note">428 CHALLENGE_REQUIRED · inline, retries by itself</span><span class="ic calm"><i data-lucide="shield-check"></i></span>
+        <p class="msg">One quick check before we start.</p><div class="turnstile"><i data-lucide="square" class="sm"></i>Verification widget renders here</div><p class="sub">The mapping starts as soon as the check passes.</p></div>
+      <div class="panel state"><span class="note">403 CHALLENGE_FAILED</span><span class="ic"><i data-lucide="shield-x"></i></span>
+        <p class="msg">The check didn't go through.</p><div class="row"><button class="btn sm" type="button"><i data-lucide="rotate-ccw" class="sm"></i>Run the check again</button></div></div>
+      <div class="panel state"><span class="note">429 RATE_LIMITED · countdown from Retry-After</span><span class="ic wait"><i data-lucide="timer"></i></span>
+        <p class="msg">You've reached this hour's analyses.</p><p class="sub">Reports that already exist still open instantly.</p>
+        <div class="row"><button class="btn sm" type="button" disabled id="cd-rate">Available in 23:41</button></div></div>
+      <div class="panel state"><span class="note">429 GITHUB_RATE_LIMIT_REACHED</span><span class="ic wait"><i data-lucide="github"></i></span>
+        <p class="msg">GitHub is limiting us right now.</p><p class="sub">This is on our side, not yours. Try again in a few minutes.</p>
+        <div class="row"><button class="btn sm" type="button"><i data-lucide="rotate-ccw" class="sm"></i>Try again</button></div></div>
+      <div class="panel state"><span class="note">503 QUEUE_FULL · countdown from Retry-After</span><span class="ic wait"><i data-lucide="users"></i></span>
+        <p class="msg">Lots of mappings running.</p><div class="row"><button class="btn sm" type="button" disabled id="cd-queue">Try again in 1:30</button></div></div>
+      <div class="panel state"><span class="note">job failed · ANALYSIS_TIMEOUT</span><span class="ic"><i data-lucide="hourglass"></i></span>
+        <p class="msg">This mapping took too long and stopped.</p><p class="sub">Very long histories sometimes do. Running it again later often works.</p>
+        <div class="row"><button class="btn sm" type="button"><i data-lucide="rotate-ccw" class="sm"></i>Run again</button></div></div>
+      <div class="panel state"><span class="note">404 JOB_NOT_FOUND · old link</span><span class="ic"><i data-lucide="unlink"></i></span>
+        <p class="msg">This progress link has expired.</p><p class="sub">If it finished, the report is still here.</p>
+        <div class="row"><button class="btn sm" type="button"><i data-lucide="file-text" class="sm"></i>Open the report</button><button class="btn line sm" type="button">Run again</button></div></div>
+      <div class="panel state"><span class="note">network error · any request</span><span class="ic"><i data-lucide="wifi-off"></i></span>
+        <p class="msg">We couldn't reach HuoCode.</p><p class="sub">Check your connection, then retry. Nothing was lost.</p>
+        <div class="row"><button class="btn sm" type="button"><i data-lucide="rotate-ccw" class="sm"></i>Retry</button></div></div>
+      <div class="panel state"><span class="note">200 · no Java file at all</span><span class="ic wait"><i data-lucide="file-question"></i></span>
+        <p class="msg">No Java files in vercel/next.js.</p><p class="sub">HuoCode reads Java only for now. The 2,412 skipped files are listed by language.</p>
+        <div class="row"><button class="btn line sm" type="button"><i data-lucide="list-tree" class="sm"></i>See skipped files</button></div></div>
+      <div class="panel state"><span class="note">0 hotspots · common on calm repos</span><span class="ic calm"><i data-lucide="circle-check"></i></span>
+        <p class="msg">No file is both complex and changing a lot.</p><p class="sub">Nothing urgent. The files listed are the closest to the line, worth a look before they grow.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" data-view="not-analyzed">
+  <div class="wrap">
+    <div class="panel big-empty" style="margin-top:60px">
+      <span class="note">GET /report → 404 REPORT_NOT_FOUND</span>
+      <span class="stage-repo"><i data-lucide="git-branch" class="sm"></i>apache/commons-lang</span>
+      <h2>This repository hasn't been mapped yet.</h2>
+      <p class="muted" style="margin:0">It takes about 20 seconds. Once it's done, this link shows the report to anyone you share it with.</p>
+      <a class="btn rose" href="#analyzing"><i data-lucide="scan-search"></i>Map apache/commons-lang</a>
+    </div>
+  </div>
+</section>
+
+<section class="view" data-view="how-it-works">
+  <div class="wrap">
+    <article class="prose">
+      <h1>How HuoCode reads a repository</h1>
+      <p>Two measurements per Java file, compared with the other files of the same repository. The code is never run or built.</p>
+      <h2><i data-lucide="ruler"></i>How complex the file is</h2>
+      <p>We take the file's most complex method and count its independent paths (cyclomatic complexity). Above 10 is the widely used limit where a method gets hard to test and to read.</p>
+      <h2><i data-lucide="history"></i>How much it changes</h2>
+      <p>Over the last 500 commits, we add up the lines added and deleted in the file, blank lines aside. A file counts as changing a lot when it stands well above the rest of the repository.</p>
+      <h2><i data-lucide="grid-2x2"></i>Where the two meet</h2>
+      <p>Crossing both gives four groups. A hotspot is complex and changing a lot: the place where a change most needs a careful review.</p>
+      <div class="swatches" style="margin-top:14px;grid-template-columns:1fr 1fr">
+        <div class="panel swatch-card"><span class="sw pinked" style="background:var(--q-hot)"></span><div><h3>Hotspot</h3><p>Complex and changing a lot.</p></div></div>
+        <div class="panel swatch-card"><span class="sw pinked" style="background:var(--q-cs)"></span><div><h3>Complex but stable</h3><p>Complex, rarely changed.</p></div></div>
+        <div class="panel swatch-card"><span class="sw pinked" style="background:var(--q-fs)"></span><div><h3>Changes often</h3><p>Simple, changed a lot.</p></div></div>
+        <div class="panel swatch-card"><span class="sw pinked" style="background:var(--q-ok)"></span><div><h3>Calm</h3><p>Simple and stable.</p></div></div>
+      </div>
+      <h2><i data-lucide="gauge"></i>The score</h2>
+      <p>Each file gets a health score from 20 to 100. It drops with complexity and with change, and only drops sharply when both are high. The repository score averages production files, weighted by size. Test files are shown, never counted.</p>
+      <div class="formula">score = max(20, 100 − 55 × complexity penalty − 45 × activity penalty)</div>
+      <div class="bands">
+        <div><b>80–100</b><span style="color:var(--ok)"><i data-lucide="circle-check" class="sm"></i>Healthy</span></div>
+        <div><b>50–79</b><span style="color:var(--warn)"><i data-lucide="eye" class="sm"></i>Needs attention</span></div>
+        <div><b>20–49</b><span style="color:var(--crit)"><i data-lucide="flame" class="sm"></i>Critical</span></div>
+      </div>
+      <h2><i data-lucide="info"></i>What it doesn't tell you</h2>
+      <p>Scores compare files within one repository; an 80 here is not an 80 elsewhere. Under 15 Java files there are too few to compare, so no score is given. Files in other languages are listed but never counted as healthy.</p>
+      <p>This tool identifies areas to prioritize for human review. It is not a security audit, nor a guarantee of code reliability. For critical projects, manual review by experts and dedicated audit tools remain essential.</p>
+    </article>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span><i data-lucide="eye-off" class="sm"></i>Static analysis only: your code is never run.</span>
+    <span><i data-lucide="infinity" class="sm"></i>Opening an existing report never counts toward your analyses.</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3-hierarchy@3.1.2/dist/d3-hierarchy.min.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script>
+(function () {
+"use strict";
+
+const RAW = [{"p":".github/CONTRIBUTING.md","s":"unsupported_language","lang":"markdown"},{"p":".github/workflows/build.yml","s":"unsupported_language","lang":"yaml"},{"p":".github/workflows/settings.xml","s":"unsupported_language","lang":"xml"},{"p":".gitignore","s":"unsupported_language","lang":"unknown"},{"p":"CHANGELOG.md","s":"unsupported_language","lang":"markdown"},{"p":"LICENSE.txt","s":"unsupported_language","lang":"text"},{"p":"README.md","s":"unsupported_language","lang":"markdown"},{"p":"RELEASING.md","s":"unsupported_language","lang":"markdown"},{"p":"checkstyle.xml","s":"unsupported_language","lang":"xml"},{"p":"pom.xml","s":"unsupported_language","lang":"xml"},{"p":"renovate.json","s":"unsupported_language","lang":"json"},{"p":"src/main/java/com/squareup/javapoet/AnnotationSpec.java","s":"analyzed","cc":9,"cm":34,"au":13,"la":450,"ld":194,"t":false,"x":false,"sc":100,"q":"healthy","cp":59,"chp":71},{"p":"src/main/java/com/squareup/javapoet/ArrayTypeName.java","s":"analyzed","cc":4,"cm":12,"au":7,"la":112,"ld":22,"t":false,"x":false,"sc":100,"q":"healthy","cp":29,"chp":6},{"p":"src/main/java/com/squareup/javapoet/ClassName.java","s":"analyzed","cc":8,"cm":45,"au":15,"la":673,"ld":654,"t":false,"x":false,"sc":55,"q":"frequent_simple","cp":53,"chp":88},{"p":"src/main/java/com/squareup/javapoet/CodeBlock.java","s":"analyzed","cc":14,"cm":33,"au":13,"la":680,"ld":268,"t":false,"x":true,"sc":95,"q":"complex_stable","cp":82,"chp":76},{"p":"src/main/java/com/squareup/javapoet/CodeWriter.java","s":"analyzed","cc":24,"cm":59,"au":14,"la":1011,"ld":534,"t":false,"x":true,"sc":81,"q":"complex_stable","cp":94,"chp":94},{"p":"src/main/java/com/squareup/javapoet/FieldSpec.java","s":"analyzed","cc":4,"cm":27,"au":10,"la":257,"ld":108,"t":false,"x":false,"sc":100,"q":"healthy","cp":29,"chp":53},{"p":"src/main/java/com/squareup/javapoet/JavaFile.java","s":"analyzed","cc":10,"cm":29,"au":13,"la":388,"ld":94,"t":false,"x":false,"sc":100,"q":"healthy","cp":71,"chp":59},{"p":"src/main/java/com/squareup/javapoet/LineWrapper.java","s":"analyzed","cc":8,"cm":5,"au":4,"la":166,"ld":23,"t":false,"x":false,"sc":100,"q":"healthy","cp":53,"chp":24},{"p":"src/main/java/com/squareup/javapoet/MethodSpec.java","s":"analyzed","cc":12,"cm":58,"au":23,"la":735,"ld":278,"t":false,"x":true,"sc":97,"q":"complex_stable","cp":76,"chp":82},{"p":"src/main/java/com/squareup/javapoet/NameAllocator.java","s":"analyzed","cc":6,"cm":5,"au":4,"la":157,"ld":5,"t":false,"x":false,"sc":100,"q":"healthy","cp":41,"chp":12},{"p":"src/main/java/com/squareup/javapoet/ParameterSpec.java","s":"analyzed","cc":4,"cm":30,"au":12,"la":256,"ld":83,"t":false,"x":false,"sc":100,"q":"healthy","cp":29,"chp":47},{"p":"src/main/java/com/squareup/javapoet/ParameterizedTypeName.java","s":"analyzed","cc":6,"cm":12,"au":7,"la":176,"ld":53,"t":false,"x":false,"sc":100,"q":"healthy","cp":41,"chp":29},{"p":"src/main/java/com/squareup/javapoet/TypeName.java","s":"analyzed","cc":17,"cm":24,"au":11,"la":434,"ld":86,"t":false,"x":true,"sc":90,"q":"complex_stable","cp":88,"chp":65},{"p":"src/main/java/com/squareup/javapoet/TypeSpec.java","s":"analyzed","cc":42,"cm":63,"au":22,"la":1244,"ld":500,"t":false,"x":true,"sc":22,"q":"hotspot","cp":100,"chp":100},{"p":"src/main/java/com/squareup/javapoet/TypeVariableName.java","s":"analyzed","cc":3,"cm":14,"au":7,"la":223,"ld":79,"t":false,"x":false,"sc":100,"q":"healthy","cp":12,"chp":35},{"p":"src/main/java/com/squareup/javapoet/Util.java","s":"analyzed","cc":10,"cm":11,"au":7,"la":217,"ld":100,"t":false,"x":false,"sc":100,"q":"healthy","cp":71,"chp":41},{"p":"src/main/java/com/squareup/javapoet/WildcardTypeName.java","s":"analyzed","cc":3,"cm":12,"au":6,"la":142,"ld":30,"t":false,"x":false,"sc":100,"q":"healthy","cp":12,"chp":18},{"p":"src/test/java/ClassNameNoPackageTest.java","s":"analyzed","cc":1,"cm":1,"au":1,"la":30,"ld":0,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":0},{"p":"src/test/java/com/squareup/javapoet/AbstractTypesTest.java","s":"analyzed","cc":3,"cm":6,"au":4,"la":294,"ld":45,"t":true,"x":false,"sc":100,"q":"healthy","cp":12,"chp":47},{"p":"src/test/java/com/squareup/javapoet/AnnotatedTypeNameTest.java","s":"analyzed","cc":1,"cm":8,"au":5,"la":251,"ld":65,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":35},{"p":"src/test/java/com/squareup/javapoet/AnnotationSpecTest.java","s":"analyzed","cc":2,"cm":12,"au":6,"la":382,"ld":41,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":53},{"p":"src/test/java/com/squareup/javapoet/ClassNameTest.java","s":"analyzed","cc":4,"cm":19,"au":9,"la":274,"ld":88,"t":true,"x":false,"sc":100,"q":"healthy","cp":29,"chp":47},{"p":"src/test/java/com/squareup/javapoet/CodeBlockTest.java","s":"analyzed","cc":2,"cm":14,"au":9,"la":429,"ld":123,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":65},{"p":"src/test/java/com/squareup/javapoet/CodeWriterTest.java","s":"analyzed","cc":1,"cm":1,"au":1,"la":18,"ld":0,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":0},{"p":"src/test/java/com/squareup/javapoet/FieldSpecTest.java","s":"analyzed","cc":2,"cm":4,"au":4,"la":60,"ld":3,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":0},{"p":"src/test/java/com/squareup/javapoet/FileReadingTest.java","s":"analyzed","cc":1,"cm":5,"au":4,"la":127,"ld":19,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":6},{"p":"src/test/java/com/squareup/javapoet/FileWritingTest.java","s":"analyzed","cc":2,"cm":44,"au":16,"la":762,"ld":1193,"t":true,"x":false,"sc":55,"q":"frequent_simple","cp":0,"chp":100},{"p":"src/test/java/com/squareup/javapoet/JavaFileTest.java","s":"analyzed","cc":1,"cm":27,"au":11,"la":1038,"ld":84,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":82},{"p":"src/test/java/com/squareup/javapoet/LineWrapperTest.java","s":"analyzed","cc":1,"cm":3,"au":2,"la":193,"ld":4,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":24},{"p":"src/test/java/com/squareup/javapoet/MethodSpecTest.java","s":"analyzed","cc":4,"cm":28,"au":17,"la":533,"ld":107,"t":true,"x":false,"sc":100,"q":"healthy","cp":29,"chp":65},{"p":"src/test/java/com/squareup/javapoet/NameAllocatorTest.java","s":"analyzed","cc":2,"cm":5,"au":5,"la":97,"ld":2,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":0},{"p":"src/test/java/com/squareup/javapoet/ParameterSpecTest.java","s":"analyzed","cc":2,"cm":8,"au":7,"la":139,"ld":8,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":6},{"p":"src/test/java/com/squareup/javapoet/TestFiler.java","s":"analyzed","cc":2,"cm":5,"au":3,"la":126,"ld":48,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":18},{"p":"src/test/java/com/squareup/javapoet/TestUtil.java","s":"analyzed","cc":4,"cm":1,"au":1,"la":15,"ld":0,"t":true,"x":false,"sc":100,"q":"healthy","cp":29,"chp":0},{"p":"src/test/java/com/squareup/javapoet/TypeNameTest.java","s":"analyzed","cc":1,"cm":9,"au":5,"la":288,"ld":121,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":53},{"p":"src/test/java/com/squareup/javapoet/TypeSpecTest.java","s":"analyzed","cc":4,"cm":77,"au":26,"la":3173,"ld":700,"t":true,"x":false,"sc":55,"q":"frequent_simple","cp":29,"chp":100},{"p":"src/test/java/com/squareup/javapoet/TypesEclipseTest.java","s":"analyzed","cc":3,"cm":2,"au":1,"la":146,"ld":4,"t":true,"x":false,"sc":100,"q":"healthy","cp":12,"chp":6},{"p":"src/test/java/com/squareup/javapoet/TypesTest.java","s":"analyzed","cc":1,"cm":10,"au":6,"la":313,"ld":279,"t":true,"x":false,"sc":55,"q":"frequent_simple","cp":0,"chp":65},{"p":"src/test/java/com/squareup/javapoet/UtilTest.java","s":"analyzed","cc":1,"cm":2,"au":2,"la":70,"ld":1,"t":true,"x":false,"sc":100,"q":"healthy","cp":0,"chp":0}];
+
+const JAVAPOET = {
+  repo: "square/javapoet", sha: "b9017a9503b76e11b4ad4c1a9f050e2d29112cb0", analyzedAt: "Oct 30, 2026",
+  strategy: "api_direct", relative: true, score: 81,
+  summary: { hotspot: 1, complexStable: 4, frequentSimple: 1, healthy: 11, unanalyzed: 11 },
+  window: { commits: 465, from: "Oct 2013", to: "Oct 2024", authors: 85 },
+  limitations: [{ code: "UNSUPPORTED_LANGUAGE_FILES", fileCount: 11 }],
+  top5: ["src/main/java/com/squareup/javapoet/TypeSpec.java", "src/main/java/com/squareup/javapoet/ClassName.java", "src/main/java/com/squareup/javapoet/CodeWriter.java", "src/main/java/com/squareup/javapoet/TypeName.java", "src/main/java/com/squareup/javapoet/CodeBlock.java"],
+  files: RAW
+};
+const SMALL = {
+  repo: "acme/tiny-cli", sha: "4e1d0c27a8b3f5e9d2c1a0b7e6f5d4c3b2a19087", analyzedAt: "Oct 31, 2026",
+  strategy: "api_direct", relative: false,
+  window: { commits: 96, from: "Mar 2025", to: "Oct 2026", authors: 3 },
+  limitations: [{ code: "INSUFFICIENT_FILES_FOR_RELATIVE_SCORING" }, { code: "UNSUPPORTED_LANGUAGE_FILES", fileCount: 2 }],
+  top5: [],
+  files: [
+    {p:"README.md",s:"unsupported_language",lang:"markdown"},
+    {p:"build.gradle.kts",s:"unsupported_language",lang:"kotlin"},
+    {p:"src/main/java/acme/cli/ArgParser.java",s:"analyzed",cc:17,cm:22,au:3,la:540,ld:210,t:false,x:true},
+    {p:"src/main/java/acme/cli/Config.java",s:"analyzed",cc:4,cm:9,au:2,la:120,ld:30,t:false,x:false},
+    {p:"src/main/java/acme/cli/Generated.java",s:"error",err:"FILE_TOO_LARGE"},
+    {p:"src/main/java/acme/cli/Main.java",s:"analyzed",cc:6,cm:14,au:2,la:210,ld:80,t:false,x:false},
+    {p:"src/main/java/acme/cli/Output.java",s:"analyzed",cc:3,cm:5,au:1,la:64,ld:9,t:false,x:false},
+    {p:"src/main/java/acme/cli/commands/Init.java",s:"analyzed",cc:8,cm:7,au:2,la:150,ld:22,t:false,x:false},
+    {p:"src/main/java/acme/cli/commands/Status.java",s:"analyzed",cc:5,cm:6,au:2,la:98,ld:18,t:false,x:false},
+    {p:"src/main/java/acme/cli/commands/Sync.java",s:"analyzed",cc:13,cm:19,au:3,la:388,ld:141,t:false,x:true},
+    {p:"src/test/java/acme/cli/ArgParserTest.java",s:"analyzed",cc:2,cm:11,au:2,la:260,ld:40,t:true,x:false},
+    {p:"src/test/java/acme/cli/SyncTest.java",s:"analyzed",cc:1,cm:6,au:2,la:140,ld:12,t:true,x:false}
+  ]
+};
+
+const Q = {
+  hotspot:         { label: "Hotspot",            short: "Complex and changing a lot", color: "var(--q-hot)", key: "hotspot" },
+  complex_stable:  { label: "Complex but stable", short: "Complex, rarely changed",    color: "var(--q-cs)",  key: "complexStable" },
+  frequent_simple: { label: "Changes often",      short: "Simple, changed a lot",      color: "var(--q-fs)",  key: "frequentSimple" },
+  healthy:         { label: "Calm",               short: "Simple and stable",          color: "var(--q-ok)",  key: "healthy" }
+};
+const ACTIONS = {
+  hotspot: ["Have two people review the next change here.", "Consider splitting it into smaller, separately testable parts.", "Check its test coverage before refactoring."],
+  complex_stable: ["No immediate action needed.", "Document how it works: if it starts changing more often, its complexity becomes a risk."],
+  frequent_simple: ["Generally fine.", "Watch that its complexity doesn't creep up over future changes."],
+  healthy: ["No action needed."]
+};
+const LANG = { markdown: "Markdown", yaml: "YAML", xml: "XML", json: "JSON", text: "Plain text", kotlin: "Kotlin", python: "Python", go: "Go", unknown: "Unknown type" };
+const ERR = { PARSE_ERROR: "Couldn't be read: syntax we can't parse", FILE_TOO_LARGE: "Too large to read (over 1 MB)" };
+const BANDICON = { ok: "circle-check", warn: "eye", crit: "flame" };
+
+const nf = new Intl.NumberFormat("en-US");
+const n = v => nf.format(v);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const plural = (v, one, many) => n(v) + " " + (v === 1 ? one : many);
+const split = p => { const i = p.lastIndexOf("/"); return i < 0 ? ["", p] : [p.slice(0, i), p.slice(i + 1)]; };
+const lines = f => (f.la || 0) + (f.ld || 0);
+const band = s => s >= 80 ? ["Healthy", "ok"] : s >= 50 ? ["Needs attention", "warn"] : ["Critical", "crit"];
+const ic = (name, cls) => `<i data-lucide="${name}"${cls ? ` class="${cls}"` : ""}></i>`;
+const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+function icons() { if (window.lucide) lucide.createIcons({ attrs: { "stroke-width": 1.5 } }); }
+
+function explain(f) {
+  const L = n(lines(f)), C = plural(f.cm, "commit", "commits"), A = plural(f.au, "person", "people");
+  switch (f.q) {
+    case "hotspot": return `Its most complex method scores ${f.cc}, ${(f.cc / 10).toFixed(1).replace(".0", "")}× the common limit of 10, and the file changed by ${L} lines over ${C} from ${A}. A change here most needs a careful review.`;
+    case "complex_stable": return `Its most complex method scores ${f.cc}, above the common limit of 10, but it changes less than the busiest files here (${L} lines over ${C}). Low urgency while it stays this way.`;
+    case "frequent_simple": return `One of the most changed files here, ${L} lines over ${C} from ${A}, but its code stays simple (most complex method: ${f.cc}).`;
+    default: return `Simple (most complex method: ${f.cc}) and not changing unusually often. Nothing to flag.`;
+  }
+}
+function fileColor(f, mode) {
+  if (f.s !== "analyzed") return "url(#hatch)";
+  if (f.t) return "var(--q-test)";
+  if (mode === "neutral") return f.x ? "var(--slate-dark)" : "var(--slate)";
+  return Q[f.q].color;
+}
+const swatch = (f, mode) => f.s !== "analyzed" ? `<span class="sw hatch"></span>` : `<span class="sw" style="background:${fileColor(f, mode)}"></span>`;
+function onDark(f, mode) {
+  if (f.s !== "analyzed") return false;
+  if (f.t) return true;
+  if (mode === "neutral") return f.x;
+  return f.q === "hotspot" || f.q === "frequent_simple";
+}
+function chips(f) {
+  if (f.s === "unsupported_language") return `<span class="chip"><span class="sw hatch"></span>Not analyzed · ${esc(LANG[f.lang] || f.lang)}</span>`;
+  if (f.s === "error") return `<span class="chip"><span class="sw hatch"></span>Couldn't read</span>`;
+  let h = f.q ? `<span class="chip"><span class="sw" style="background:${Q[f.q].color}"></span>${Q[f.q].label}</span>`
+              : `<span class="chip"><span class="sw" style="background:${f.x ? "var(--slate-dark)" : "var(--slate)"}"></span>${f.x ? "Method over 10" : "Within the limit"}</span>`;
+  if (f.t) h += `<span class="chip test">${ic("flask-conical", "sm")}Test</span>`;
+  return h;
+}
+function legendHTML(mode) {
+  const items = mode === "neutral"
+    ? [["var(--slate-dark)", "Most complex method over 10"], ["var(--slate)", "Within the limit"]]
+    : Object.values(Q).map(q => [q.color, q.label]);
+  return items.map(([c, l]) => `<span><i class="pinked" style="background:${c};--z:4px"></i>${l}</span>`).join("")
+    + `<span><i style="background:var(--q-test)"></i>Test (not scored)</span><span><i class="hatch"></i>Not analyzed</span>`;
+}
+
+/* treemap */
+function groupByDir(list) {
+  const groups = new Map();
+  list.forEach(f => { const d = split(f.p)[0] || "(repository root)"; if (!groups.has(d)) groups.set(d, []); groups.get(d).push(f); });
+  return groups;
+}
+const cellValue = f => f.s === "analyzed" ? Math.max(2, Math.min(30, f.cc)) : 1.6;
+const DEFS = `<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#EEE6E4"/><line x1="0" y1="0" x2="0" y2="6" stroke="#C4B5B6" stroke-width="2"/></pattern><radialGradient id="pinhead" cx=".35" cy=".35" r=".7"><stop offset="0" stop-color="#F6B3C4"/><stop offset=".6" stop-color="#A8234B"/></radialGradient></defs>`;
+
+function drawTreemap(host, files, o) {
+  const w = Math.max(280, host.clientWidth || 600);
+  const h = o.height || Math.round(Math.max(320, Math.min(560, w * 0.6)));
+  let children = [...groupByDir(files)].map(([name, fs]) => ({ name, children: fs.map(file => ({ file })) }));
+  if (o.dir) children = children.filter(c => c.name === o.dir);
+  const root = d3.hierarchy({ children }).sum(d => d.file ? cellValue(d.file) : 0).sort((a, b) => b.value - a.value);
+  d3.treemap().tile(d3.treemapSquarify.ratio(1.3)).size([w, h]).paddingOuter(4).paddingTop(d => d.depth === 1 ? (o.mini ? 5 : 22) : 4).paddingInner(2).round(true)(root);
+  let s = `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="Treemap of files grouped by folder">${DEFS}`;
+  root.children.forEach(g => {
+    const gw = g.x1 - g.x0;
+    s += `<rect x="${g.x0 + .5}" y="${g.y0 + .5}" width="${Math.max(0, gw - 1)}" height="${Math.max(0, g.y1 - g.y0 - 1)}" rx="6" fill="var(--linen)" stroke="var(--chalk)" stroke-dasharray="4 3"/>`;
+    if (!o.mini && gw > 60) {
+      const max = Math.floor((gw - 12) / 7.2);
+      const label = g.data.name.length > max ? "…" + g.data.name.slice(-(max - 1)) : g.data.name;
+      s += `<rect class="grp-hit" data-dir="${esc(g.data.name)}" x="${g.x0}" y="${g.y0}" width="${gw}" height="20" fill="transparent"><title>${esc(g.data.name)} · ${g.leaves().length} files · click to zoom</title></rect>`;
+      s += `<text class="grp-label" x="${g.x0 + 8}" y="${g.y0 + 15}" pointer-events="none">${esc(label)}</text>`;
+    }
+  });
+  root.leaves().forEach(leaf => {
+    const f = leaf.data.file, cw = Math.max(0, leaf.x1 - leaf.x0), ch = Math.max(0, leaf.y1 - leaf.y0);
+    const dim = o.focusQ && !(f.s === "analyzed" && !f.t && f.q === o.focusQ);
+    const fill = fileColor(f, o.mode), hatched = fill.startsWith("url");
+    s += `<rect class="cell${o.selected === f.p ? " sel" : ""}" data-i="${f.i}" x="${leaf.x0}" y="${leaf.y0}" width="${cw}" height="${ch}" rx="2"${hatched ? ` fill="${fill}"` : ` style="fill:${fill}"`} opacity="${dim ? 0.15 : 1}"${o.mini ? "" : ` tabindex="0" role="button" aria-label="${esc(f.p)}"`}></rect>`;
+    if (!o.mini && cw > 56 && ch > 22 && !dim) {
+      const name = split(f.p)[1].replace(/\.java$/, ""), max = Math.floor((cw - 10) / 7);
+      const t = name.length > max ? name.slice(0, max - 1) + "…" : name, dark = onDark(f, o.mode);
+      s += `<text class="cell-label" x="${leaf.x0 + 6}" y="${leaf.y0 + 16}" fill="${dark ? "#fff" : "var(--ink)"}">${esc(t)}</text>`;
+      if (ch > 38 && f.sc !== undefined) s += `<text class="cell-label" x="${leaf.x0 + 6}" y="${leaf.y0 + 32}" fill="${dark ? "rgba(255,255,255,.85)" : "var(--ink-2)"}">${f.sc}</text>`;
+    }
+    if (f.q === "hotspot" && !f.t && cw > 18 && ch > 18) {
+      const px = leaf.x1 - 12, py = leaf.y0 + 11;
+      s += `<line x1="${px}" y1="${py}" x2="${px - 5}" y2="${py + 13}" stroke="#4A3A4F" stroke-width="1.2" pointer-events="none"/><circle cx="${px}" cy="${py}" r="5.5" fill="url(#pinhead)" stroke="#fff" stroke-width="1" pointer-events="none"/>`;
+    }
+  });
+  host.innerHTML = s + "</svg>" + (o.mini ? "" : `<div class="tip" role="tooltip"></div>`);
+}
+function tipHTML(f) {
+  const [d, fn] = split(f.p);
+  let h = `<b>${esc(fn)}</b><div class="d">${esc(d)}</div>`;
+  if (f.s !== "analyzed") return h + `<div class="r"><span>${f.s === "error" ? esc(ERR[f.err]) : "Not analyzed · " + esc(LANG[f.lang] || f.lang)}</span></div>`;
+  if (f.sc !== undefined) h += `<div class="r"><span>Health</span><span>${f.sc} · ${band(f.sc)[0]}</span></div><div class="r"><span>Group</span><span>${Q[f.q].label}${f.t ? " · Test" : ""}</span></div>`;
+  else if (f.t) h += `<div class="r"><span>Group</span><span>Test</span></div>`;
+  h += `<div class="r"><span>Most complex method</span><span>${f.cc}${f.x ? " · over 10" : ""}</span></div><div class="r"><span>Lines changed</span><span>${n(lines(f))}</span></div><div class="r"><span>Commits · people</span><span>${f.cm} · ${f.au}</span></div>`;
+  return h;
+}
+
+/* scatter */
+function drawScatter(host, files, o) {
+  const w = Math.max(280, host.clientWidth || 600), h = Math.round(Math.max(320, Math.min(540, w * 0.58)));
+  const m = { l: 46, r: 18, t: 16, b: 44 }, iw = w - m.l - m.r, ih = h - m.t - m.b;
+  const X = v => m.l + v / 100 * iw, Y = v => m.t + ih - v / 100 * ih;
+  const pts = files.filter(f => f.s === "analyzed" && f.cp !== undefined), prod = pts.filter(f => !f.t);
+  const guide = (Math.max(...prod.filter(f => !f.x).map(f => f.cp)) + Math.min(...prod.filter(f => f.x).map(f => f.cp))) / 2;
+  let s = `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="Scatter plot of change activity against complexity">${DEFS}`;
+  [0, 25, 50, 75, 100].forEach(v => { s += `<line x1="${X(v)}" x2="${X(v)}" y1="${m.t}" y2="${m.t + ih}" stroke="var(--chalk-soft)"/><line x1="${m.l}" x2="${m.l + iw}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--chalk-soft)"/>`; });
+  s += `<text x="${m.l}" y="${h - 24}" class="grp-label">least changed</text><text x="${m.l + iw}" y="${h - 24}" text-anchor="end" class="grp-label">most changed</text>`;
+  s += `<text x="${m.l + iw / 2}" y="${h - 6}" text-anchor="middle" class="grp-label" style="fill:var(--ink)">Change activity, ranked within this repository</text>`;
+  s += `<text transform="translate(16 ${m.t + ih / 2}) rotate(-90)" text-anchor="middle" class="grp-label" style="fill:var(--ink)">Complexity, ranked within this repository</text>`;
+  s += `<line x1="${m.l}" x2="${m.l + iw}" y1="${Y(guide)}" y2="${Y(guide)}" stroke="var(--garnet)" stroke-dasharray="6 4"/><text x="${m.l + 6}" y="${Y(guide) - 7}" class="grp-label" style="fill:var(--garnet-deep)">above this seam: most complex method over 10</text>`;
+  pts.forEach(f => {
+    const jx = ((f.i * 37) % 11 - 5) * 0.6, jy = ((f.i * 53) % 9 - 4) * 0.6;
+    const dim = o.focusQ && !(!f.t && f.q === o.focusQ), sel = o.selected === f.p;
+    s += `<circle class="cell" data-i="${f.i}" cx="${X(f.chp) + jx}" cy="${Y(f.cp) + jy}" r="${sel ? 9 : 6.5}" style="fill:${fileColor(f)};fill-opacity:${dim ? 0.15 : 0.82}" stroke="${sel ? "var(--ink)" : "#fff"}" stroke-width="${sel ? 2.5 : 1.2}" tabindex="0" role="button" aria-label="${esc(f.p)}"></circle>`;
+  });
+  host.innerHTML = s + `</svg><div class="tip" role="tooltip"></div>`;
+}
+function wireMap(host, files, onSelect, onZoom) {
+  host.onmousemove = e => {
+    const tip = host.querySelector(".tip"); if (!tip) return;
+    const c = e.target.closest(".cell");
+    if (!c) { tip.style.display = "none"; return; }
+    tip.innerHTML = tipHTML(files[+c.dataset.i]); tip.style.display = "block";
+    const r = host.getBoundingClientRect();
+    let x = e.clientX - r.left + 16, y = e.clientY - r.top + 16;
+    if (x + 280 > r.width) x = e.clientX - r.left - 286;
+    if (y + tip.offsetHeight > r.height) y = Math.max(0, e.clientY - r.top - tip.offsetHeight - 12);
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  };
+  host.onmouseleave = () => { const t = host.querySelector(".tip"); if (t) t.style.display = "none"; };
+  host.onclick = e => {
+    const c = e.target.closest(".cell"); if (c) return onSelect(files[+c.dataset.i]);
+    const g = e.target.closest(".grp-hit"); if (g && onZoom) onZoom(g.dataset.dir);
+  };
+  host.onkeydown = e => { if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("cell")) { e.preventDefault(); onSelect(files[+e.target.dataset.i]); } };
+}
+
+/* report */
+function makeReport(rootEl, raw, opts) {
+  const files = raw.files.map((f, i) => Object.assign({ i }, f));
+  const data = Object.assign({}, raw, { files });
+  const byPath = new Map(files.map(f => [f.p, f]));
+  const analyzed = files.filter(f => f.s === "analyzed"), tests = analyzed.filter(f => f.t), prod = analyzed.filter(f => !f.t);
+  const other = files.filter(f => f.s === "unsupported_language"), errs = files.filter(f => f.s === "error");
+  const mode = data.relative ? "quadrant" : "neutral";
+  const st = { tab: "overview", view: "treemap", dir: null, focusQ: null, filter: "all", sort: "folders", q: "", closed: new Set(),
+    selected: data.top5[0] || [...prod].sort((a, b) => b.cc - a.cc)[0].p };
+  const [owner, name] = data.repo.split("/");
+  const TABS = [["overview", "Overview", "layout-dashboard"], ["map", "Map", "map"], ["files", "Files", "list-tree"]];
+
+  rootEl.innerHTML = `
+    <div class="repo-strip">
+      <div>
+        <h1><span>${esc(owner)} /</span> ${esc(name)}</h1>
+        <div class="meta-line">
+          <span class="chip fresh">${ic("circle-check", "sm")}Up to date</span>
+          <a href="https://github.com/${esc(data.repo)}/commit/${data.sha}">${ic("git-commit-horizontal", "sm")}<span class="num">${data.sha.slice(0, 7)}</span></a>
+          <span>${ic("calendar", "sm")}Mapped ${data.analyzedAt}</span>
+          <a href="https://github.com/${esc(data.repo)}">${ic("github", "sm")}View on GitHub</a>
+        </div>
+      </div>
+      <div class="strip-actions">
+        <button class="btn line sm" type="button" data-copy="https://huocode.app/report/${esc(data.repo)}">${ic("link", "sm")}Copy link</button>
+        <a class="btn line sm" href="#analyzing">${ic("refresh-cw", "sm")}Map again</a>
+        <a class="btn sm" href="#landing">${ic("plus", "sm")}Another repository</a>
+      </div>
+    </div>
+    ${opts.note ? `<p style="margin:12px 0 0"><span class="note">${opts.note}</span></p>` : ""}
+    <div class="tab-sentinel" data-sentinel></div>
+    <div class="tabbar" data-tabbar><div class="tabs glide-host" data-glide="bar" role="tablist" aria-label="Report sections">
+      ${TABS.map(([k, l, i]) => `<button class="tab" role="tab" type="button" id="${opts.id}-tab-${k}" aria-controls="${opts.id}-panel" data-tab="${k}">${ic(i)}${l}${k === "files" ? `<span class="count">${files.length}</span>` : ""}</button>`).join("")}
+    </div></div>
+    <div class="tabpanel" role="tabpanel" id="${opts.id}-panel" data-panel></div>`;
+
+  const $ = s => rootEl.querySelector(s), $$ = s => [...rootEl.querySelectorAll(s)];
+  const panel = $("[data-panel]");
+
+  function overviewHTML() {
+    const hot = data.relative ? data.summary.hotspot : 0;
+    let score;
+    if (data.relative) {
+      const [bl, bc] = band(data.score);
+      score = `<section class="panel score-panel" aria-label="Repository health">
+        <div class="score-head"><h2>${ic("gauge", "sm")}Repository health</h2><span class="band ${bc}">${ic(BANDICON[bc], "sm")}${bl}</span></div>
+        <div class="score-big"><span data-count>${data.score}</span><small>/ 100</small></div>
+        <div class="tape" aria-hidden="true"><div class="ticks"></div>
+          ${[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map(v => `<span class="lbl${v === 0 ? " first" : v === 100 ? " last" : ""}" style="left:${v}%">${v}</span>`).join("")}
+          <div class="zones"><i></i><i></i><i></i></div><div class="needle" data-needle style="left:${data.score}%"></div></div>
+        <div class="zone-legend"><span><i style="background:#E9A99F"></i>Critical under 50</span><span><i style="background:#E8C77C"></i>Needs attention 50–79</span><span><i style="background:#A9C8A4"></i>Healthy 80+</span></div>
+        <p class="verdict-text">${hot > 0 ? `<b>${plural(hot, "file is", "files are")}</b> both complex and changing a lot. Start there.` : `No file is both complex and changing a lot. Nothing urgent.`}</p>
+        <div class="score-foot">${ic("scale", "sm")}Average of ${plural(prod.length, "production file", "production files")}, weighted by size, compared within this repository only.</div>
+      </section>`;
+    } else {
+      score = `<section class="panel score-panel" aria-label="Repository health">
+        <div class="score-head"><h2>${ic("gauge", "sm")}Repository health</h2><span class="band" style="color:var(--ink-2)">${ic("circle-minus", "sm")}No score</span></div>
+        <div class="score-big" style="color:var(--ink-3)">—</div>
+        <p class="verdict-text">Too few Java files to compare (${analyzed.length + errs.length}). Scores rank files against each other, which needs at least 15.</p>
+        <div class="score-foot">${ic("ruler", "sm")}<span>What still holds on its own: whether a file's most complex method goes over the common limit of 10. <b style="color:var(--ink)">${plural(prod.filter(f => f.x).length, "file does", "files do")}.</b></span></div>
+      </section>`;
+    }
+    const cellQ = q => { const c = data.summary[Q[q].key];
+      return `<button type="button" class="qcell${c ? "" : " zero"}" data-q="${q}"><span class="sw pinked" style="background:${Q[q].color}"></span><span class="n">${c}</span><span class="l">${Q[q].label}</span><span class="s">${Q[q].short}</span></button>`; };
+    const matrix = data.relative ? `<section class="panel matrix-panel" aria-label="Files by group">
+        <h2>${ic("grid-2x2", "sm")}Production files by group<span style="font-weight:500">· click a group to list its files</span></h2>
+        <div class="matrix-wrap"><div class="axis-y">${ic("arrow-up", "sm")}more complex</div>
+          <div class="matrix">${cellQ("complex_stable")}${cellQ("hotspot")}${cellQ("healthy")}${cellQ("frequent_simple")}</div>
+          <div class="axis-x">changes more ${ic("arrow-right", "sm")}</div></div>
+        <div class="matrix-extra"><span><i style="background:var(--q-test)"></i>${plural(tests.length, "test file", "test files")}, shown but not scored</span><span><i class="hatch"></i>${plural(data.summary.unanalyzed, "file", "files")} in other languages</span></div>
+      </section>` : `<section class="panel matrix-panel" aria-label="What was measured">
+        <h2>${ic("ruler", "sm")}What was measured</h2>
+        <div class="matrix-extra" style="display:grid;gap:12px;font-size:15px">
+          <span><i style="background:var(--slate-dark)"></i>${plural(prod.filter(f => f.x).length, "file", "files")} with a method over the complexity limit</span>
+          <span><i style="background:var(--slate)"></i>${plural(prod.filter(f => !f.x).length, "file", "files")} within the limit</span>
+          <span><i style="background:var(--q-test)"></i>${plural(tests.length, "test file", "test files")}</span>
+          <span><i class="hatch"></i>${plural(other.length + errs.length, "file", "files")} not analyzed</span></div>
+        <button class="btn line sm" type="button" data-goto="files" style="justify-self:start">${ic("list-tree", "sm")}Browse all files</button>
+      </section>`;
+    const start = data.relative && data.top5.length ? `
+      <div class="block-head"><div><h2>Start here</h2><p>The ${data.top5.length} production files with the lowest health, worst first.</p></div></div>
+      <ol class="start">${data.top5.map((p, k) => { const f = byPath.get(p), [d, fn] = split(p), [bl, bc] = band(f.sc);
+        return `<li><button type="button" data-open="${esc(p)}">
+          <span class="rank">${k + 1}</span>
+          <span><span class="fname">${esc(fn)}</span><span class="fdir" style="display:block">${esc(d)}</span><span class="chips">${chips(f)}</span></span>
+          <span class="sc ${bc}">${f.sc}<small>${bl}</small></span>
+          <span class="why">${explain(f)}<span class="act">${ic("sparkle", "sm")}${ACTIONS[f.q][0]}</span></span>
+          <span class="go">${ic("chevron-right")}</span></button></li>`; }).join("")}</ol>` : "";
+    const caveats = data.limitations.map(l => l.code === "UNSUPPORTED_LANGUAGE_FILES"
+        ? `<div class="caveat info">${ic("languages")}<span><b>${plural(l.fileCount, "file", "files")} not analyzed.</b> Written in languages HuoCode doesn't read yet. Listed in Files, never counted as healthy.</span></div>`
+        : `<div class="caveat">${ic("triangle-alert")}<span><b>No comparison.</b> Too few Java files for a reliable ranking, so there are no scores or groups.</span></div>`).join("")
+      + (data.strategy === "api_direct" ? `<div class="caveat info">${ic("file-pen")}<span><b>Renamed files.</b> A file renamed recently may show less history than it really has.</span></div>` : "");
+    return `<div class="ov-top">${score}${matrix}</div>${start}
+      <div class="basis panel">
+        <div><span class="big">${n(data.window.commits)}</span><span class="lbl">${ic("git-commit-horizontal", "sm")}recent commits read</span></div>
+        <div><span class="big">${n(data.window.authors)}</span><span class="lbl">${ic("users", "sm")}people in that history</span></div>
+        <div><span class="big" style="font-size:24px">${data.window.from} – ${data.window.to}</span><span class="lbl">${ic("calendar-range", "sm")}period covered</span></div>
+        <div><span style="font-size:14.5px">These results describe that window only; older history isn't counted.</span><a href="#how-it-works" class="lbl" style="color:var(--ink)">${ic("book-open", "sm")}How the score is computed</a></div>
+      </div>
+      <div class="caveats">${caveats}</div>
+      <p class="disclaimer">${ic("shield-alert", "sm")}<span>This tool identifies areas to prioritize for human review, based on complexity and how much each file's lines changed. It is not a security audit, nor a guarantee of code reliability. For critical projects (finance, healthcare, infrastructure), manual review by experts and dedicated audit tools remain essential.</span></p>`;
+  }
+
+  function tagHTML(f, compact) {
+    const [d, fn] = split(f.p);
+    let h = `<div class="tag-head"><div><div class="fname">${esc(fn)}</div><div class="fdir">${esc(d) || "repository root"}</div><div class="chips">${chips(f)}</div></div>
+      ${f.q === "hotspot" && !f.t ? `<span style="color:var(--garnet)" title="Hotspot">${ic("pin")}</span>` : ""}</div>`;
+    if (f.s !== "analyzed") {
+      h += `<div class="na-box">${ic("eye-off", "sm")}<span>${f.s === "error" ? esc(ERR[f.err]) + "." : esc(LANG[f.lang] || f.lang) + " isn't read yet: HuoCode reads Java only for now."} Not analyzed doesn't mean low risk.</span></div>`;
+    } else {
+      if (f.sc !== undefined) { const [bl, bc] = band(f.sc);
+        h += `<div class="tag-score"><span class="sc ${bc}">${f.sc}</span><span><span class="band ${bc}">${ic(BANDICON[bc], "sm")}${bl}</span><span class="muted">${f.t ? "Test file: not counted in the repository score" : "File health, out of 100"}</span></span></div>`; }
+      if (f.q) h += `<p style="margin:0;font-size:15px">${explain(f)}</p>`;
+      h += `<dl class="metrics">
+        <div class="metric wide"><dt>${ic("ruler", "sm")}Most complex method</dt><dd>${f.cc}</dd><span class="cc-rule"><span class="fill" style="width:${Math.min(100, f.cc / 50 * 100)}%"></span><span class="lim" style="left:20%"></span></span><span class="sub">${f.x ? "Over" : "Within"} the common limit of 10 (rose mark), on a 0–50 tape</span></div>
+        <div class="metric"><dt>${ic("file-diff", "sm")}Lines changed</dt><dd>${n(lines(f))}</dd><span class="sub"><span class="add">+${n(f.la)}</span> · <span class="del">−${n(f.ld)}</span></span></div>
+        <div class="metric"><dt>${ic("git-commit-horizontal", "sm")}Commits</dt><dd>${n(f.cm)}</dd><span class="sub">in the period covered</span></div>
+        <div class="metric"><dt>${ic("users", "sm")}People</dt><dd>${n(f.au)}</dd><span class="sub">who changed it</span></div>
+        ${f.cp !== undefined ? `<div class="metric"><dt>${ic("chart-column", "sm")}Rank here</dt><dd>${f.cp} · ${f.chp}</dd><span class="sub">complexity · change, out of 100</span></div>` : `<div class="metric"><dt>${ic("chart-column", "sm")}Rank here</dt><dd>—</dd><span class="sub">too few files to rank</span></div>`}
+      </dl>`;
+      if (f.q && !compact) h += `<div style="display:grid;gap:10px"><h2>${ic("sparkle", "sm")}Suggested next steps</h2><ul class="next">${ACTIONS[f.q].map(a => `<li>${ic("check", "sm")}${a}</li>`).join("")}</ul></div>`;
+    }
+    h += `<div class="tag-actions"><a class="btn line sm" href="https://github.com/${esc(data.repo)}/blob/${data.sha}/${esc(f.p)}">${ic("external-link", "sm")}Open on GitHub</a>${compact ? `<button class="btn sm" type="button" data-goto="files">${ic("list-tree", "sm")}See in Files</button>` : ""}</div>`;
+    return h;
+  }
+
+  function mapHTML() {
+    return `<div class="map-grid">
+      <section class="panel map-panel" aria-label="Map of files">
+        <div class="map-bar"><div class="crumbs" data-crumbs></div>
+          ${data.relative ? `<div class="seg glide-host" data-glide="pill" role="group" aria-label="Visualization"><button type="button" data-view-btn="treemap" aria-pressed="${st.view === "treemap"}">${ic("layout-grid", "sm")}Treemap</button><button type="button" data-view-btn="scatter" aria-pressed="${st.view === "scatter"}">${ic("chart-scatter", "sm")}Scatter</button></div>` : ""}</div>
+        <div class="map-host" data-map></div>
+        <div class="legend">${legendHTML(mode)}<span class="hint">${ic("mouse-pointer-click", "sm")}Folder name to zoom, file to inspect</span></div>
+      </section>
+      <aside class="panel tag" data-tag aria-live="polite"></aside></div>`;
+  }
+  function renderMap() {
+    const host = $("[data-map]"); if (!host) return;
+    if (st.view === "treemap") drawTreemap(host, files, { mode, dir: st.dir, focusQ: st.focusQ, selected: st.selected });
+    else drawScatter(host, files, { focusQ: st.focusQ, selected: st.selected });
+    $("[data-crumbs]").innerHTML = st.view === "scatter" ? `<span>${ic("info", "sm")}Analyzed Java files · tests in violet</span>`
+      : st.dir ? `<button type="button" data-crumb-root>${ic("folders", "sm")}All folders</button><span>/</span><span>${esc(st.dir)}</span>` : `<span>${ic("folders", "sm")}All folders</span>`;
+    icons();
+  }
+
+  function filesHTML() {
+    const F = [["all", "All", files.length], ["prod", "Production", prod.length], ["test", "Tests", tests.length], ["other", "Other languages", other.length], ["error", "Couldn't read", errs.length]];
+    return `<div class="explorer">
+      <section class="panel tree-panel" aria-label="All files">
+        <div class="tree-tools">
+          <label class="search" for="${opts.id}-q">${ic("search", "sm")}<input id="${opts.id}-q" type="search" placeholder="Search a path" data-q value="${esc(st.q)}"></label>
+          <div class="filters" role="group" aria-label="Filter">${F.map(([k, l, c]) => `<button type="button" data-filter="${k}" aria-pressed="${st.filter === k}" ${c === 0 && k !== "all" ? "disabled" : ""}>${l}<span class="c">${c}</span></button>`).join("")}</div>
+          <div class="tools-row">
+            <div class="focus-pill" data-focus-pill></div>
+            <div class="seg glide-host" data-glide="pill" role="group" aria-label="Arrange" style="margin-left:auto"><button type="button" data-sort="folders" aria-pressed="${st.sort === "folders"}">${ic("folder-tree", "sm")}Folders</button><button type="button" data-sort="risk" aria-pressed="${st.sort === "risk"}">${ic("arrow-down-wide-narrow", "sm")}${data.relative ? "Worst first" : "Most complex"}</button></div>
+          </div>
+        </div>
+        <div class="tree" data-tree role="listbox" aria-label="Files"></div>
+        <div class="tree-foot"><span><kbd>↑</kbd> <kbd>↓</kbd> move</span><span><kbd>/</kbd> search</span><span data-shown></span></div>
+      </section>
+      <section class="panel tag" data-tag aria-live="polite"></section></div>`;
+  }
+  function matches(f) {
+    if (st.filter === "prod" && !(f.s === "analyzed" && !f.t)) return false;
+    if (st.filter === "test" && !(f.s === "analyzed" && f.t)) return false;
+    if (st.filter === "other" && f.s !== "unsupported_language") return false;
+    if (st.filter === "error" && f.s !== "error") return false;
+    if (st.focusQ && !(f.s === "analyzed" && !f.t && f.q === st.focusQ)) return false;
+    if (st.q && !f.p.toLowerCase().includes(st.q.toLowerCase())) return false;
+    return true;
+  }
+  const risk = f => f.s !== "analyzed" ? 1e6 : data.relative ? f.sc * 1000 - f.cc + (f.t ? 500 : 0) : -f.cc;
+  function fileRow(f, showDir) {
+    const [d, fn] = split(f.p), sb = f.sc !== undefined ? band(f.sc)[1] : "none";
+    const marks = (f.q === "hotspot" && !f.t ? `<span class="pin" title="Hotspot">${ic("pin", "sm")}</span>` : "") + (f.t ? `<span class="flask" title="Test file">${ic("flask-conical", "sm")}</span>` : "") + (f.s === "error" ? `<span title="Couldn't read">${ic("file-x", "sm")}</span>` : "");
+    const val = f.sc !== undefined ? f.sc : f.s === "analyzed" ? f.cc : "—";
+    return `<li role="none"><button type="button" class="frow" role="option" data-path="${esc(f.p)}" aria-selected="${st.selected === f.p}" tabindex="${st.selected === f.p ? 0 : -1}" title="${esc(f.p)}">
+      ${swatch(f, mode)}<span class="n">${esc(fn)}${showDir ? `<small>${esc(d) || "repository root"}</small>` : ""}</span><span class="marks">${marks}</span>
+      <span class="s ${sb}">${val}</span></button></li>`;
+  }
+  function renderTree() {
+    const tree = $("[data-tree]"); if (!tree) return;
+    const shown = files.filter(matches);
+    $("[data-shown]").textContent = `${shown.length} of ${files.length} shown`;
+    if (!shown.length) { tree.innerHTML = `<div class="tree-empty">${ic("search-x")}<span>No file matches these filters.</span><button type="button" class="btn line sm" data-reset>Clear filters</button></div>`; icons(); return; }
+    if (st.sort === "risk") {
+      tree.innerHTML = `<ul class="files flat" style="padding:0">${[...shown].sort((a, b) => risk(a) - risk(b) || a.p.localeCompare(b.p)).map(f => fileRow(f, true)).join("")}</ul>`;
+    } else {
+      const col = { hotspot: "var(--q-hot)", complex_stable: "var(--q-cs)", frequent_simple: "var(--q-fs)", healthy: "var(--q-ok)", test: "var(--q-test)", over: "var(--slate-dark)", within: "var(--slate)", na: "#CDBDBF" };
+      const order = [...groupByDir(shown)].sort((a, b) => Math.min(...a[1].map(risk)) - Math.min(...b[1].map(risk)) || a[0].localeCompare(b[0]));
+      tree.innerHTML = order.map(([dir, fs]) => {
+        const counts = {}; fs.forEach(f => { const k = f.s !== "analyzed" ? "na" : f.t ? "test" : mode === "neutral" ? (f.x ? "over" : "within") : f.q; counts[k] = (counts[k] || 0) + 1; });
+        const mix = Object.keys(col).filter(k => counts[k]).map(k => `<i style="width:${counts[k] / fs.length * 100}%;background:${col[k]}"></i>`).join("");
+        const closed = st.closed.has(dir) && !st.q;
+        fs.sort((a, b) => risk(a) - risk(b) || a.p.localeCompare(b.p));
+        return `<div class="folder${closed ? " closed" : ""}"><button type="button" class="folder-row" data-folder="${esc(dir)}" aria-expanded="${!closed}" title="${esc(dir)}">
+          <span class="chev">${ic("chevron-down", "sm")}</span>${ic(closed ? "folder" : "folder-open", "sm")}<span class="p"><bdi>${esc(dir)}</bdi></span>
+          <span class="cnt"><span class="mix" aria-hidden="true">${mix}</span>${fs.length}</span></button>
+          <ul class="files" role="group">${fs.map(f => fileRow(f, false)).join("")}</ul></div>`;
+      }).join("");
+    }
+    icons();
+  }
+  function renderFocus() {
+    const p = $("[data-focus-pill]"); if (!p) return;
+    if (!st.focusQ) { p.classList.remove("show"); p.innerHTML = ""; return; }
+    p.classList.add("show");
+    p.innerHTML = `<span class="chip"><span class="sw" style="background:${Q[st.focusQ].color}"></span>${Q[st.focusQ].label} only</span><button type="button" data-clear-focus aria-label="Show every group">${ic("x", "sm")}</button>`;
+    icons();
+  }
+  function renderTag(compact) { const el = $("[data-tag]"); if (!el) return; el.innerHTML = tagHTML(byPath.get(st.selected), compact); icons(); }
+
+  function render() {
+    panel.classList.remove("enter"); void panel.offsetWidth; panel.classList.add("enter");
+    $$(".tab").forEach(b => { const on = b.dataset.tab === st.tab; b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1; });
+    if (st.tab === "overview") { panel.innerHTML = overviewHTML(); icons(); animateOverview(); }
+    if (st.tab === "map") { panel.innerHTML = mapHTML(); wireMap($("[data-map]"), files, f => select(f), dir => { st.dir = dir; renderMap(); }); renderMap(); renderTag(true); }
+    if (st.tab === "files") { panel.innerHTML = filesHTML(); renderTree(); renderFocus(); renderTag(false); const r = $(`.frow[aria-selected="true"]`); if (r) r.scrollIntoView({ block: "nearest" }); }
+    icons();
+  }
+  function animateOverview() {
+    if (!window.gsap || reduced()) return;
+    const num = panel.querySelector("[data-count]"), needle = panel.querySelector("[data-needle]");
+    if (num) { const o = { v: 0 }; gsap.to(o, { v: data.score, duration: 1.1, ease: "power3.out", onUpdate: () => { num.textContent = Math.round(o.v); } }); }
+    if (needle) gsap.fromTo(needle, { left: "0%" }, { left: data.score + "%", duration: 1.1, ease: "power3.out" });
+    gsap.from(panel.querySelectorAll(".start li"), { y: 10, opacity: .35, duration: .5, ease: "power2.out", stagger: .06, clearProps: "all" });
+  }
+  function goTab(t) { if (opts.hashTabs) location.hash = t === "overview" ? "report" : "report-" + t; else { st.tab = t; render(); } }
+  function select(f) {
+    st.selected = f.p;
+    if (st.tab === "map") { renderMap(); renderTag(true); }
+    if (st.tab === "files") { $$(".frow").forEach(r => { const on = r.dataset.path === f.p; r.setAttribute("aria-selected", String(on)); r.tabIndex = on ? 0 : -1; }); renderTag(false); }
+  }
+
+  rootEl.addEventListener("click", e => {
+    const t = e.target.closest("button, [data-goto]"); if (!t) return;
+    if (t.matches(".tab")) goTab(t.dataset.tab);
+    else if (t.matches("[data-goto]")) goTab(t.dataset.goto);
+    else if (t.matches("[data-open]")) { st.selected = t.dataset.open; goTab("files"); }
+    else if (t.matches(".qcell")) { st.focusQ = t.dataset.q; st.filter = "all"; st.q = ""; const first = files.filter(matches).sort((a, b) => risk(a) - risk(b))[0]; if (first) st.selected = first.p; goTab("files"); }
+    else if (t.matches("[data-view-btn]")) { st.view = t.dataset.viewBtn; $$("[data-view-btn]").forEach(b => b.setAttribute("aria-pressed", String(b === t))); renderMap(); }
+    else if (t.matches("[data-crumb-root]")) { st.dir = null; renderMap(); }
+    else if (t.matches("[data-filter]")) { st.filter = t.dataset.filter; $$("[data-filter]").forEach(b => b.setAttribute("aria-pressed", String(b === t))); renderTree(); }
+    else if (t.matches("[data-sort]")) { st.sort = t.dataset.sort; $$("[data-sort]").forEach(b => b.setAttribute("aria-pressed", String(b === t))); renderTree(); }
+    else if (t.matches("[data-clear-focus]")) { st.focusQ = null; renderFocus(); renderTree(); }
+    else if (t.matches("[data-reset]")) { st.filter = "all"; st.focusQ = null; st.q = ""; render(); }
+    else if (t.matches("[data-folder]")) { const d = t.dataset.folder; if (st.closed.has(d)) st.closed.delete(d); else st.closed.add(d); renderTree(); }
+    else if (t.matches(".frow")) select(byPath.get(t.dataset.path));
+  });
+  rootEl.addEventListener("input", e => { if (e.target.matches("[data-q]")) { st.q = e.target.value.trim(); renderTree(); } });
+  rootEl.addEventListener("keydown", e => {
+    if (e.target.matches(".tab") && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+      const ks = TABS.map(x => x[0]), i = ks.indexOf(e.target.dataset.tab), nx = ks[(i + (e.key === "ArrowRight" ? 1 : ks.length - 1)) % ks.length];
+      goTab(nx); setTimeout(() => { const b = rootEl.querySelector(`[data-tab="${nx}"]`); if (b) b.focus(); }, 0); return;
+    }
+    if (st.tab !== "files") return;
+    if (e.key === "/" && !e.target.matches("input")) { e.preventDefault(); $("[data-q]").focus(); return; }
+    if ((e.key === "ArrowDown" || e.key === "ArrowUp") && e.target.closest(".tree-panel")) {
+      const rows = $$(".frow").filter(r => r.offsetParent !== null); if (!rows.length) return;
+      e.preventDefault();
+      const i = rows.findIndex(r => r.dataset.path === st.selected);
+      const nx = rows[Math.max(0, Math.min(rows.length - 1, i < 0 ? 0 : i + (e.key === "ArrowDown" ? 1 : -1)))];
+      select(byPath.get(nx.dataset.path)); nx.focus(); nx.scrollIntoView({ block: "nearest" });
+    }
+  });
+
+  function keepTabbar() {
+    const sen = $("[data-sentinel]"), topH = topHeight();
+    const y = sen.getBoundingClientRect().top;
+    if (y < topH) window.scrollTo(0, y + window.scrollY - topH);
+  }
+  return {
+    show(tab) { const changed = tab && tab !== st.tab; if (tab) st.tab = tab; render(); if (changed) keepTabbar(); updateStuck(); },
+    resize() { if (st.tab === "map") renderMap(); }
+  };
+}
+
+/* sticky top bar, sticky tabs, sliding indicators */
+const topEl = document.querySelector("[data-top]");
+function topHeight() { return topEl.offsetHeight; }
+function setTopVar() { document.documentElement.style.setProperty("--top-h", topHeight() + "px"); }
+if (window.ResizeObserver) new ResizeObserver(() => { setTopVar(); glideAll(); updateStuck(); }).observe(topEl);
+setTopVar();
+function updateStuck() {
+  const topH = topHeight();
+  document.querySelectorAll("[data-tabbar]").forEach(tb => {
+    const sen = tb.previousElementSibling;
+    tb.classList.toggle("stuck", !!(sen && sen.offsetParent) && sen.getBoundingClientRect().top < topH - 0.5);
+  });
+}
+window.addEventListener("scroll", updateStuck, { passive: true });
+function glideAll() {
+  document.querySelectorAll(".glide-host").forEach(host => {
+    let g = host.querySelector(":scope > .glider");
+    if (!g) { g = document.createElement("span"); g.className = "glider no-anim"; g.setAttribute("aria-hidden", "true"); host.prepend(g); }
+    const a = host.querySelector(':scope [aria-selected="true"], :scope [aria-pressed="true"], :scope [aria-current="page"]');
+    if (!a || !host.offsetParent) { if (!g.classList.contains("no-anim")) g.classList.add("no-anim"); if (g.style.opacity !== "0") g.style.opacity = 0; return; }
+    const bar = host.dataset.glide === "bar", inset = bar ? 12 : 0;
+    g.style.opacity = 1;
+    g.style.width = (a.offsetWidth - inset * 2) + "px";
+    if (!bar) g.style.height = a.offsetHeight + "px";
+    g.style.transform = `translate(${a.offsetLeft + inset}px, ${bar ? 0 : a.offsetTop}px)`;
+    if (g.classList.contains("no-anim")) requestAnimationFrame(() => requestAnimationFrame(() => g.classList.remove("no-anim")));
+  });
+}
+let glideQueued = false;
+new MutationObserver(list => { if (glideQueued || list.every(m => m.target.classList && m.target.classList.contains("glider"))) return; glideQueued = true; requestAnimationFrame(() => { glideQueued = false; glideAll(); }); })
+  .observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["aria-selected", "aria-pressed", "aria-current", "class"] });
+if (document.fonts) document.fonts.ready.then(() => { document.querySelectorAll(".glider").forEach(g => g.classList.add("no-anim")); glideAll(); });
+
+/* views */
+const report = makeReport(document.getElementById("report-root"), JAVAPOET, { id: "jp", hashTabs: true });
+const small = makeReport(document.getElementById("small-root"), SMALL, { id: "sm", note: "Illustrative data: acme/tiny-cli is a made-up repository with 10 Java files, to show the contract when relativeScoringEnabled = false." });
+const landMap = document.getElementById("land-map");
+document.getElementById("land-legend").innerHTML = legendHTML("quadrant");
+const landFiles = JAVAPOET.files.map((f, i) => Object.assign({ i }, f));
+
+function sew(el) {
+  if (el.dataset.done) return; el.dataset.done = "1";
+  const w = el.clientWidth || 600, h = el.clientHeight || 150;
+  const root = d3.hierarchy({ children: Array.from({ length: 18 }, (_, k) => ({ v: 1 + ((k * 7) % 9) })) }).sum(d => d.v || 0);
+  d3.treemap().size([w, h]).paddingInner(6).paddingOuter(8)(root);
+  const rects = root.leaves().map(l => `<rect x="${l.x0}" y="${l.y0}" width="${l.x1 - l.x0}" height="${l.y1 - l.y0}" rx="4"/>`).join("");
+  el.innerHTML = `<svg viewBox="0 0 ${w} ${h}"><g class="chalk-path">${rects}</g><g class="stitch-path">${rects}</g></svg>`;
+}
+
+let syncTimer = null, jobTimer = null, cdTimer = null, pendingReport = false;
+function stopTimers() { clearTimeout(syncTimer); clearInterval(jobTimer); clearInterval(cdTimer); }
+function runSync() {
+  const items = [...document.querySelectorAll("#sync-steps li")]; let k = 0;
+  const step = () => {
+    items.forEach((li, j) => { li.className = j < k ? "done" : j === k ? "now" : ""; li.querySelector(".state").textContent = j < k ? "done" : j === k ? "in progress" : ""; });
+    if (k < items.length) { k++; syncTimer = setTimeout(step, 1100); }
+    else if (pendingReport) { pendingReport = false; syncTimer = setTimeout(() => { location.hash = "report"; }, 500); }
+    else syncTimer = setTimeout(() => { k = 0; step(); }, 1500);
+  };
+  step();
+}
+function runJob() {
+  const t0 = Date.now(), el = document.getElementById("job-timer"), slow = document.getElementById("job-slow");
+  const tick = () => { const s = Math.floor((Date.now() - t0) / 1000) + 12; el.textContent = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); slow.classList.toggle("show", s > 45); };
+  tick(); jobTimer = setInterval(tick, 1000);
+}
+function runCountdowns() {
+  let a = 23 * 60 + 41, b = 90; const fmt = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+  cdTimer = setInterval(() => { a = Math.max(0, a - 1); b = b > 0 ? b - 1 : 90;
+    document.getElementById("cd-rate").textContent = "Available in " + fmt(a); document.getElementById("cd-queue").textContent = "Try again in " + fmt(b); }, 1000);
+}
+
+const VIEWS = { "landing": "landing", "analyzing": "analyzing", "queued": "queued", "report": "report", "report-map": "report", "report-files": "report", "small-repo": "small-repo", "states": "states", "not-analyzed": "not-analyzed", "how-it-works": "how-it-works" };
+let lastView = null;
+function route() {
+  const hash = location.hash.slice(1), key = VIEWS[hash] ? hash : "landing", v = VIEWS[key];
+  stopTimers();
+  document.querySelectorAll(".view").forEach(s => s.classList.toggle("on", s.dataset.view === v));
+  document.querySelectorAll(".review a").forEach(a => { if (a.getAttribute("href") === "#" + key) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  if (v !== lastView) window.scrollTo(0, 0);
+  lastView = v;
+  if (v === "landing") drawTreemap(landMap, landFiles, { mode: "quadrant", mini: true, height: Math.round(Math.max(230, (landMap.clientWidth || 500) * 0.66)) });
+  if (v === "analyzing") { sew(document.querySelector('[data-view="analyzing"] [data-sew]')); runSync(); }
+  if (v === "queued") { sew(document.querySelector('[data-view="queued"] [data-sew]')); runJob(); }
+  if (v === "report") report.show(key === "report-map" ? "map" : key === "report-files" ? "files" : "overview");
+  if (v === "small-repo") small.show();
+  if (v === "states") runCountdowns();
+  icons();
+}
+window.addEventListener("hashchange", route);
+let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => {
+  document.querySelectorAll(".glider").forEach(g => g.classList.add("no-anim")); glideAll(); updateStuck();
+  const k = location.hash.slice(1);
+  if (k === "report-map") report.resize(); else if (k === "small-repo") small.resize(); else if (!k || k === "landing") route();
+}, 150); });
+
+const input = document.getElementById("repo-input"), msg = document.getElementById("land-msg"), fld = document.getElementById("land-field");
+function normalize(raw) {
+  const s = raw.trim().replace(/\.git$/, "").replace(/\/+$/, "");
+  const m = s.match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([A-Za-z0-9-]+)\/([A-Za-z0-9_.-]+)$/i) || s.match(/^([A-Za-z0-9-]+)\/([A-Za-z0-9_.-]+)$/);
+  return m ? m[1] + "/" + m[2] : null;
+}
+function fieldError(text) { fld.classList.add("bad"); msg.innerHTML = `<i data-lucide="circle-alert" class="sm"></i>${text}`; icons(); }
+document.getElementById("land-form").addEventListener("submit", e => {
+  e.preventDefault();
+  if (!input.value.trim()) return fieldError("Paste a GitHub repository first, like square/javapoet.");
+  const repo = normalize(input.value);
+  if (!repo) return fieldError("Use a GitHub address like github.com/owner/repo, or just owner/repo.");
+  fld.classList.remove("bad"); msg.textContent = "";
+  if (repo.toLowerCase() === "apache/dubbo") { location.hash = "queued"; return; }
+  document.getElementById("sync-repo").textContent = repo; pendingReport = true; location.hash = "analyzing";
+});
+input.addEventListener("input", () => { fld.classList.remove("bad"); msg.textContent = ""; });
+document.querySelectorAll("[data-ex]").forEach(b => b.addEventListener("click", () => { input.value = b.dataset.ex; input.focus(); fld.classList.remove("bad"); msg.textContent = ""; }));
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-copy]"); if (!b) return;
+  const old = b.innerHTML, done = t => { b.textContent = t; setTimeout(() => { b.innerHTML = old; }, 1400); };
+  try { navigator.clipboard.writeText(b.dataset.copy).then(() => done("Copied"), () => done("Copy blocked")); } catch (_) { done("Copy blocked"); }
+});
+
+route();
+})();
+</script>
+</body>
+</html>
