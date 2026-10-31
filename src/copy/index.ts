@@ -6,3 +6,4 @@ export * from "./quadrants";
 export * from "./strategy";
 export * from "./waiting";
 export * from "./site";
+export * from "./analyze";
