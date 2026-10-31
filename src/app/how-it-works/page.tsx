@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { HowArticle } from "@/components/how/HowArticle";
-import { SiteFooter } from "@/components/site/SiteFooter";
-import { SiteHeader } from "@/components/site/SiteHeader";
+import { HowArticle } from "@/features/how-it-works";
+import { SiteFooter } from "@/shared/layout/SiteFooter";
+import { SiteHeader } from "@/shared/layout/SiteHeader";
 
 export const metadata: Metadata = {
   title: "How it works · HuoCode",

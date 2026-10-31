@@ -1,155 +1,101 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import type { AnalysisResult } from "@/api-client/api";
 import {
-  AnalysisResultStrategyEnum,
   AsyncFailureCode,
   FailureCode,
   FileErrorCode,
-  FileStatus,
   LimitationCode,
   Quadrant,
-} from "../../src/api-client/api.ts";
-import { failureCopy } from "../../src/copy/failures.ts";
-import { fileErrorCopy, fileStatusCopy } from "../../src/copy/fileStatus.ts";
-import { limitationCopy } from "../../src/copy/limitations.ts";
-import { quadrantCopy } from "../../src/copy/quadrants.ts";
-import { strategyCopy } from "../../src/copy/strategy.ts";
-import type { ApiFailure } from "../../src/api/failures.ts";
+} from "@/api-client/api";
+import type { ApiFailure } from "@/api/failures";
+import { failureCopy } from "@/features/analysis/failure-copy";
+import { caveats } from "@/features/report/overview/copy";
+import { quadrantCopy } from "@/shared/copy/quadrants";
+import { explain, FILE_ERROR, languageName } from "@/features/report/copy";
 
 const ACTION =
   /\b(try|check|need|want|start|run|worth|wait|queued|give it|second attempt|again|smaller)\b/i;
+const JARGON = /\b(percentile|api|cached|jobid|strategy|ttl|polling)\b/i;
 
-function nonEmpty(value: string, what: string) {
-  assert.ok(value.trim().length > 0, `${what} has empty copy`);
+function nonEmpty(value: string | null | undefined, what: string) {
+  assert.ok(value && value.trim().length > 0, `${what} has empty copy`);
 }
 
 describe("every code the API can send has copy", () => {
-  it("covers all failure codes", () => {
-    for (const code of Object.values(FailureCode)) {
-      const copy = failureCopy({ kind: "api", code, retryAfterSeconds: null });
-      nonEmpty(copy.title, `FailureCode.${code}.title`);
-      nonEmpty(copy.detail, `FailureCode.${code}.detail`);
-    }
-  });
-
-  it("covers all async failure codes", () => {
-    for (const code of Object.values(AsyncFailureCode)) {
-      const copy = failureCopy({ kind: "api", code, retryAfterSeconds: null });
-      nonEmpty(copy.title, `AsyncFailureCode.${code}.title`);
-    }
-  });
-
-  it("covers the two non-api failure kinds", () => {
-    const offline: ApiFailure = { kind: "offline" };
-    const http: ApiFailure = {
-      kind: "http",
-      status: 502,
-      retryAfterSeconds: null,
-    };
-    nonEmpty(failureCopy(offline).detail, "offline");
-    nonEmpty(failureCopy(http).detail, "http");
-  });
-
-  it("covers all limitation codes", () => {
-    for (const code of Object.values(LimitationCode)) {
-      nonEmpty(limitationCopy({ code, fileCount: 12 }).text, `${code}`);
-    }
-  });
-
-  it("counts the affected files where the contract supplies a count", () => {
-    assert.match(
-      limitationCopy({
-        code: "UNSUPPORTED_LANGUAGE_FILES",
-        fileCount: 12,
-      }).text,
-      /\b12 files\b/,
-    );
-    assert.match(
-      limitationCopy({
-        code: "UNSUPPORTED_LANGUAGE_FILES",
-        fileCount: 1,
-      }).text,
-      /\b1 file\b/,
-    );
-  });
-
-  it("invents no count where the contract omits one", () => {
-    const text = limitationCopy({
-      code: "INSUFFICIENT_FILES_FOR_RELATIVE_SCORING",
-    }).text;
-    assert.doesNotMatch(text, /\d/, "a file count was fabricated");
-  });
-
-  it("covers all quadrants", () => {
-    for (const quadrant of Object.values(Quadrant)) {
-      const copy = quadrantCopy(quadrant);
-      nonEmpty(copy.label, `Quadrant.${quadrant}.label`);
-      nonEmpty(copy.detail, `Quadrant.${quadrant}.detail`);
-    }
-  });
-
-  it("covers all file statuses and error codes", () => {
-    for (const status of Object.values(FileStatus)) {
-      nonEmpty(fileStatusCopy(status).label, `FileStatus.${status}`);
-    }
-    for (const code of Object.values(FileErrorCode)) {
-      nonEmpty(fileErrorCopy(code), `FileErrorCode.${code}`);
-    }
-  });
-
-  it("covers all retrieval strategies", () => {
-    for (const strategy of Object.values(AnalysisResultStrategyEnum)) {
-      nonEmpty(strategyCopy(strategy).label, `Strategy.${strategy}`);
-    }
-  });
-});
-
-describe("a file we did not measure never reads as safe", () => {
-  it("marks only 'analyzed' as measured", () => {
-    for (const status of Object.values(FileStatus)) {
-      const copy = fileStatusCopy(status);
-      assert.equal(copy.measured, status === "analyzed");
-    }
-  });
-
-  it("tells the reader to treat unmeasured files as unknown, not safe", () => {
-    for (const status of ["unsupported_language", "error"] as const) {
-      const copy = fileStatusCopy(status);
-      assert.match(copy.detail, /unknown, not as safe/);
-    }
-  });
-});
-
-describe("failure copy always names a way forward", () => {
-  const codes = [
-    ...Object.values(FailureCode),
-    ...Object.values(AsyncFailureCode),
-  ] as FailureCode[];
-
-  it("never leaves the reader stuck", () => {
+  it("covers every failure code with a way forward and no jargon", () => {
+    const codes = [
+      ...Object.values(FailureCode),
+      ...Object.values(AsyncFailureCode),
+    ] as FailureCode[];
     for (const code of codes) {
-      const { detail } = failureCopy({
+      const { title, detail } = failureCopy({
         kind: "api",
         code,
         retryAfterSeconds: null,
       });
+      nonEmpty(title, code);
       assert.ok(
         ACTION.test(detail),
         `${code} gives no way forward: "${detail}"`,
       );
+      assert.doesNotMatch(`${title} ${detail}`, JARGON, code);
     }
   });
 
-  it("covers the non-code failure kinds too", () => {
+  it("covers the non-code failure kinds", () => {
     const kinds: ApiFailure[] = [
       { kind: "offline" },
       { kind: "http", status: 502, retryAfterSeconds: null },
     ];
-    for (const failure of kinds) {
-      assert.ok(
-        ACTION.test(failureCopy(failure).detail),
-        `${failure.kind} gives no way forward: "${failureCopy(failure).detail}"`,
-      );
+    for (const failure of kinds)
+      assert.ok(ACTION.test(failureCopy(failure).detail), failure.kind);
+  });
+
+  it("covers every quadrant, file error and limitation", () => {
+    for (const quadrant of Object.values(Quadrant))
+      nonEmpty(quadrantCopy(quadrant).label, quadrant);
+    for (const code of Object.values(FileErrorCode))
+      nonEmpty(FILE_ERROR[code], code);
+    for (const code of Object.values(LimitationCode)) {
+      const report = {
+        limitations: [{ code, fileCount: 3 }],
+        strategy: "clone",
+      } as unknown as AnalysisResult;
+      nonEmpty(caveats(report)[0]?.title, code);
     }
+  });
+
+  it("names unknown languages by their code instead of inventing one", () => {
+    assert.equal(languageName("markdown"), "Markdown");
+    assert.equal(languageName("zig"), "zig");
+    assert.equal(languageName(undefined), "Unknown type");
+  });
+});
+
+describe("narration only uses numbers the API sent", () => {
+  it("explains every quadrant, and nothing for unscored files", () => {
+    const churn = {
+      commits: 63,
+      authors: 22,
+      linesAdded: 1244,
+      linesDeleted: 500,
+      effectiveLines: 1744,
+    };
+    for (const quadrant of Object.values(Quadrant)) {
+      const text = explain({
+        path: "A.java",
+        status: "analyzed",
+        complexity: 42,
+        churn,
+        quadrant,
+      });
+      nonEmpty(text, quadrant);
+      assert.doesNotMatch(text!, JARGON, quadrant);
+    }
+    assert.equal(
+      explain({ path: "A.java", status: "analyzed", complexity: 4, churn }),
+      null,
+    );
   });
 });

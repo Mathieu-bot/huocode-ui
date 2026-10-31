@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ReportGate } from "@/components/report/ReportGate";
-import { SiteFooter } from "@/components/site/SiteFooter";
-import { SiteHeader } from "@/components/site/SiteHeader";
+import { ReportGate } from "@/features/report";
+import { SiteFooter } from "@/shared/layout/SiteFooter";
+import { SiteHeader } from "@/shared/layout/SiteHeader";
 import { fetchReport } from "@/api/reports";
-import { fmt, plural } from "@/copy/report";
-import { parseRepo, reportPath, repoSlug } from "@/lib/repo";
+import { fmt, plural } from "@/features/report";
+import { parseRepo, reportPath, repoSlug } from "@/shared/lib/repo";
 
 type Props = { params: Promise<{ owner: string; repo: string }> };
 
