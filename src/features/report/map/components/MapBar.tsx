@@ -2,6 +2,7 @@ import { ChartScatter, Folders, Info, LayoutGrid } from "lucide-react";
 import { GlideGroup } from "@/shared/ui/GlideGroup";
 import { mapCopy } from "../copy";
 import type { MapView } from "../hooks/useMapView";
+import { PathText } from "@/shared/ui/PathText";
 
 const icon = { size: 15, strokeWidth: 1.5, "aria-hidden": true } as const;
 
@@ -33,7 +34,7 @@ export function MapBar({ view, onView, dir, onRoot }: Props) {
               {mapCopy.allFolders}
             </button>
             <span aria-hidden>/</span>
-            <span className="break-all">{dir}</span>
+            <PathText path={dir} />
           </>
         ) : (
           <span className="inline-flex items-center gap-1.5">

@@ -7,6 +7,7 @@ import { band, splitPath } from "../../model";
 import { FileChips } from "../../file-detail/FileChips";
 import { useReportContext } from "../../shell/ReportContext";
 import { icon } from "./ScorePanel";
+import { PathText } from "@/shared/ui/PathText";
 
 const BAND_TEXT = { ok: "text-ok", warn: "text-warn", crit: "text-crit" };
 
@@ -30,13 +31,14 @@ export function StartRow({ file, rank }: { file: FileResult; rank: number }) {
           {rank}
         </span>
         <span className="min-w-0">
-          <span className="block font-mono text-[15px] font-semibold break-all">
+          <span className="block font-mono text-[15px] font-semibold [overflow-wrap:anywhere]">
             {name}
           </span>
           {dir && (
-            <span className="block font-mono text-[12.5px] break-all text-ink-3">
-              {dir}
-            </span>
+            <PathText
+              path={dir}
+              className="block font-mono text-[12.5px] text-ink-3"
+            />
           )}
           <FileChips file={file} className="mt-2" />
         </span>

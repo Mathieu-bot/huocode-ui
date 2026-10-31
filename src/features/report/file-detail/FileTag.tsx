@@ -22,6 +22,7 @@ import { band, splitPath } from "../model";
 import { FileChips } from "./FileChips";
 import { FileMetrics } from "./FileMetrics";
 import { useReportContext } from "../shell/ReportContext";
+import { PathText } from "@/shared/ui/PathText";
 
 const icon = { size: 15, strokeWidth: 1.5, "aria-hidden": true } as const;
 const BAND_TEXT = { ok: "text-ok", warn: "text-warn", crit: "text-crit" };
@@ -44,12 +45,13 @@ export function FileTag({
     <div className="grid gap-4">
       <div className="grid grid-cols-[1fr_auto] items-start gap-2.5">
         <div className="min-w-0">
-          <div className="font-mono text-lg font-semibold break-all">
+          <div className="font-mono text-lg font-semibold [overflow-wrap:anywhere]">
             {name}
           </div>
-          <div className="font-mono text-[12.5px] break-all text-ink-3">
-            {dir || "repository root"}
-          </div>
+          <PathText
+            path={dir || "repository root"}
+            className="block font-mono text-[12.5px] text-ink-3"
+          />
           <FileChips file={file} className="mt-2" />
         </div>
         {file.quadrant === "hotspot" && !file.isTest && (
