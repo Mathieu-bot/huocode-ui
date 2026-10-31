@@ -3,13 +3,57 @@ import { notFound } from "next/navigation";
 import { ReportGate } from "@/components/report/ReportGate";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteHeader } from "@/components/site/SiteHeader";
-import { parseRepo, repoSlug } from "@/lib/repo";
+import { fetchReport } from "@/api/reports";
+import { fmt, plural } from "@/copy/report";
+import { parseRepo, reportPath, repoSlug } from "@/lib/repo";
 
 type Props = { params: Promise<{ owner: string; repo: string }> };
 
+const METADATA_TIMEOUT_MS = 2500;
+
+async function reportDescription(owner: string, repo: string) {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<null>((resolve) => {
+    timer = setTimeout(() => resolve(null), METADATA_TIMEOUT_MS);
+  });
+  try {
+    const report = await Promise.race([fetchReport(owner, repo), timeout]);
+    if (!report) return null;
+    if (!report.relativeScoringEnabled) return "Too few Java files for a score";
+    const s = report.summary ?? {};
+    const groups = [
+      plural(s.hotspot ?? 0, "hotspot", "hotspots"),
+      `${fmt(s.complexStable ?? 0)} complex but stable`,
+      `${fmt(s.frequentSimple ?? 0)} changes often`,
+      `${fmt(s.healthy ?? 0)} calm`,
+    ].join(", ");
+    const score = report.repoHealthScore;
+    return score === undefined
+      ? groups
+      : `Repository health ${Math.round(score)}/100 · ${groups}`;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { owner, repo } = await params;
-  return { title: `HuoCode · ${owner}/${repo}` };
+  const title = `HuoCode · ${owner}/${repo}`;
+  const ref = parseRepo(`${owner}/${repo}`);
+  if (!ref) return { title };
+  const description = await reportDescription(ref.owner, ref.repo);
+  return {
+    title,
+    ...(description ? { description } : {}),
+    alternates: { canonical: reportPath(ref) },
+    openGraph: {
+      title,
+      ...(description ? { description } : {}),
+      url: reportPath(ref),
+    },
+  };
 }
 
 export default async function ReportPage({ params }: Props) {

@@ -15,6 +15,9 @@ const redHatMono = Red_Hat_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: process.env.NEXT_PUBLIC_SITE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
+    : undefined,
   title: "HuoCode",
   description: "Map where the risk sits in a codebase.",
   icons: { icon: "/logo/favicon.svg" },
