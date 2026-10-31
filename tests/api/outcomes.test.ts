@@ -4,7 +4,7 @@ import {
   UnexpectedPayloadError,
   toJobPoll,
   toSubmitOutcome,
-} from "../../src/api/outcomes.ts";
+} from "@/api/outcomes";
 
 describe("toSubmitOutcome", () => {
   it("reads a synchronous 200 as a finished result", () => {

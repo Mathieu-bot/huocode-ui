@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { AnalyzeScreen } from "@/components/analyze/AnalyzeScreen";
-import { SiteFooter } from "@/components/site/SiteFooter";
-import { SiteHeader } from "@/components/site/SiteHeader";
-import { parseRepo, repoSlug } from "@/lib/repo";
+import { AnalyzeScreen } from "@/features/analysis";
+import { SiteFooter } from "@/shared/layout/SiteFooter";
+import { SiteHeader } from "@/shared/layout/SiteHeader";
+import { parseRepo, repoSlug } from "@/shared/lib/repo";
 
 type Props = {
   params: Promise<{ owner: string; repo: string }>;

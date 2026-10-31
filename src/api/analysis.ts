@@ -1,6 +1,6 @@
-import { analysisApi } from "./base";
-import type { JobPoll, SubmitOutcome } from "./outcomes";
-import { toJobPoll, toSubmitOutcome } from "./outcomes";
+import { analysisApi } from "@/api/base";
+import type { JobPoll, SubmitOutcome } from "@/api/outcomes";
+import { toJobPoll, toSubmitOutcome } from "@/api/outcomes";
 
 export async function submitAnalysis(
   repoUrl: string,

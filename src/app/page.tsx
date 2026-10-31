@@ -1,7 +1,7 @@
-import { Hero } from "@/components/site/Hero";
-import { QuadrantGuide } from "@/components/site/QuadrantGuide";
-import { SiteFooter } from "@/components/site/SiteFooter";
-import { SiteHeader } from "@/components/site/SiteHeader";
+import { Hero } from "@/features/landing";
+import { QuadrantGuide } from "@/features/landing";
+import { SiteFooter } from "@/shared/layout/SiteFooter";
+import { SiteHeader } from "@/shared/layout/SiteHeader";
 
 export default function Home() {
   return (

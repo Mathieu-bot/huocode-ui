@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AnalysisApi, ReportsApi } from "@/api-client/api";
 import { Configuration } from "@/api-client/configuration";
-import { resolveApiBase } from "./baseUrl";
+import { resolveApiBase } from "@/api/baseUrl";
 
 const base = resolveApiBase(
   process.env.NEXT_PUBLIC_HUO_API_URL,

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk, Red_Hat_Mono } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 
 const hanken = Hanken_Grotesk({
   variable: "--font-hanken",

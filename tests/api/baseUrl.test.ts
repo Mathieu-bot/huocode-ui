@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { resolveApiBase } from "../../src/api/baseUrl.ts";
+import { resolveApiBase } from "@/api/baseUrl";
 
 describe("resolveApiBase", () => {
   it("uses the configured URL without its trailing slashes", () => {

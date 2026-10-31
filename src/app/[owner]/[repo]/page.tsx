@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { parseRepo, reportPath } from "@/lib/repo";
+import { parseRepo, reportPath } from "@/shared/lib/repo";
 
 type Props = { params: Promise<{ owner: string; repo: string }> };
 

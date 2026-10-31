@@ -4,7 +4,7 @@ import type {
   ListReportFilesSortEnum,
   ListReportFilesStatusEnum,
 } from "@/api-client/api";
-import { reportsApi } from "./base";
+import { reportsApi } from "@/api/base";
 
 export async function fetchReport(
   owner: string,

@@ -1,7 +1,7 @@
 import { Compass } from "lucide-react";
-import { SiteFooter } from "@/components/site/SiteFooter";
-import { SiteHeader } from "@/components/site/SiteHeader";
-import { ButtonLink } from "@/components/ui/Button";
+import { SiteFooter } from "@/shared/layout/SiteFooter";
+import { SiteHeader } from "@/shared/layout/SiteHeader";
+import { ButtonLink } from "@/shared/ui/Button";
 
 export default function NotFound() {
   return (

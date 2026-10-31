@@ -9,10 +9,10 @@ import {
   Quadrant,
 } from "@/api-client/api";
 import type { ApiFailure } from "@/api/failures";
-import { failureCopy } from "@/copy/failures";
-import { caveats } from "@/copy/overview";
-import { quadrantCopy } from "@/copy/quadrants";
-import { explain, FILE_ERROR, languageName } from "@/copy/report";
+import { failureCopy } from "@/features/analysis/failure-copy";
+import { caveats } from "@/features/report/overview/copy";
+import { quadrantCopy } from "@/shared/copy/quadrants";
+import { explain, FILE_ERROR, languageName } from "@/features/report/copy";
 
 const ACTION =
   /\b(try|check|need|want|start|run|worth|wait|queued|give it|second attempt|again|smaller)\b/i;
