@@ -14,15 +14,26 @@ pnpm install
 pnpm dev
 ```
 
-The app reads `NEXT_PUBLIC_HUO_API_URL`. It defaults to the preproduction
-instance; point it elsewhere with a `.env.local`.
+Configure it with a `.env.local`:
 
-```bash
-NEXT_PUBLIC_HUO_API_URL=https://preprod.example.com
-```
+| Variable                         | What it is                                                                |
+| -------------------------------- | ------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_HUO_API_URL`        | HuoCode API base URL. Defaults to the preproduction instance.             |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key for the challenge before a new analysis.    |
+| `NEXT_PUBLIC_SITE_URL`           | Public origin of this app, used for canonical and social links. Optional. |
 
-The API's `huocode.cors.allowed-origins` must list this app's origin, or the
-browser blocks every request. It is disabled when unset.
+The API's `huocode.cors.allowed-origins` must list this app's origin
+(`http://localhost:3000` in development), or the browser blocks every request.
+
+## Routes
+
+| Route                                     | What it shows                                    |
+| ----------------------------------------- | ------------------------------------------------ |
+| `/`                                       | Landing page: paste a repository                 |
+| `/analyze/{owner}/{repo}?job=`            | Analysis in progress                             |
+| `/report/{owner}/{repo}?tab=&view=#file=` | Report, with its tab, map view and selected file |
+| `/{owner}/{repo}`                         | Shortcut that redirects to the report            |
+| `/how-it-works`                           | How the score is computed                        |
 
 ## Scripts
 
@@ -36,8 +47,8 @@ browser blocks every request. It is disabled when unset.
 
 ## Conventions
 
-Commits are [Conventional Commits](https://www.conventionalcommits.org/), and
-every commit body explains the _why_. Pull requests use the template in
+Commits are [Conventional Commits](https://www.conventionalcommits.org/), with
+a subject line only. Pull requests use the template in
 `.github/PULL_REQUEST_TEMPLATE.md` and cover one feature.
 
 Source files stay under 200 lines of code. ESLint enforces this via
