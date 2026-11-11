@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk, Red_Hat_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const hanken = Hanken_Grotesk({
@@ -30,7 +31,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${hanken.variable} ${redHatMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-dvh flex-col font-sans">{children}</body>
+      <body className="flex min-h-dvh flex-col font-sans">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
